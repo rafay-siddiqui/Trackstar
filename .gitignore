@@ -1,0 +1,23 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/client-trackstar/node_modules
+/client-trackstar/.pnp
+client-trackstar/.pnp.js
+
+# testing
+/client-trackstar/coverage
+
+# production
+/client-trackstar/build
+
+# misc
+client-trackstar/.DS_Store
+client-trackstar/.env.local
+client-trackstar/.env.development.local
+client-trackstar/.env.test.local
+client-trackstar/.env.production.local
+
+client-trackstar/npm-debug.log*
+client-trackstar/yarn-debug.log*
+client-trackstar/yarn-error.log*
