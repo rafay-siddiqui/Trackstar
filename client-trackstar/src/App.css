@@ -3,13 +3,26 @@
   justify-content: space-between;
   padding-left: 30px;
   padding-right: 30px;
-  background-color: skyblue;
+  background-color: rgba(96, 201, 243, 0.8);
   color: whitesmoke;
+  position: relative;
+  z-index: 1;
+  transition: background-color 0.3s ease;
+}
+
+.navbar:hover {
+  background-color: rgba(96, 201, 243,0.97);
 }
 
 .navbar ul {
   display: flex;
   list-style-type: none;
+}
+
+.navbar h1 {
+  font-size: xx-large;
+  margin: 0px;
+  margin-top: 15px;
 }
 
 .navitem {
@@ -21,27 +34,9 @@
   color: skyblue;
 }
 
-.routemaker {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px;
-  padding: 10px;
-  background-color: burlywood;
-}
-
-.routemaker-menu {
-  display: flex;
-  flex-direction: column;
-  background-color: green;
-  flex: 1;
-  margin-right: 10px;
-}
-
 .routemaker-map {
-  height: 100%;
+  position: absolute;
+  top: 0px;
   width: 100%;
-  background-color: green;
-  padding: 10px;
-  flex: 3;
-  margin-left:10px;
+  z-index: -1;
 }
