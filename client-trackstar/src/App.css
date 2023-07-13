@@ -56,5 +56,6 @@
 #map-location {
   height: 30px;
   font-size: large;
-  text-align: 'center';
+  text-align: center;
+  margin: 5px;
 }
