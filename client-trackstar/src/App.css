@@ -11,7 +11,7 @@
 }
 
 .navbar:hover {
-  background-color: rgba(96, 201, 243,0.97);
+  background-color: rgba(96, 201, 243,0.95);
 }
 
 .navbar ul {
@@ -39,4 +39,22 @@
   top: 0px;
   width: 100%;
   z-index: -1;
+}
+
+.routemaker-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  position: absolute;
+  top: 100px;
+  left: 50px;
+  padding: 20px;
+  z-index: 1;
+  background-color: rgba(50,200,50,0.8);
+}
+
+#map-location {
+  height: 30px;
+  font-size: large;
+  text-align: 'center';
 }

@@ -1,6 +1,6 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer } from 'react-leaflet'
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet'
 
 function App() {
   return (
@@ -14,14 +14,21 @@ function App() {
         </ul>
       </nav>
 
-        <div className="routemaker-map">
-          <MapContainer center={[48.8566, 2.3522]} zoom={13} style={{ height: "92vh", width: "100%" }}>
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-          </MapContainer>
-        </div>
+      <div className="routemaker-map">
+        <MapContainer center={[43.5588, -79.7116]} zoom={13} zoomControl={false}
+          style={{ height: "100vh", width: "100%" }}>
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+          <ZoomControl position='bottomright' />
+        </MapContainer>
+      </div>
+
+      <div className="routemaker-form">
+        <input id='map-location' type='text' placeholder='Location'></input>
+        <span>Option 2</span>
+      </div>
 
     </div>
   );
