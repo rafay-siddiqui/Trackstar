@@ -1,9 +1,47 @@
 .navbar {
   display: flex;
   justify-content: space-between;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: skyblue;
+  color: whitesmoke;
 }
 
 .navbar ul {
   display: flex;
   list-style-type: none;
+}
+
+.navitem {
+  padding: 10px;
+}
+
+.navitem:hover {
+  background-color: whitesmoke;
+  color: skyblue;
+}
+
+.routemaker {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 10px;
+  background-color: burlywood;
+}
+
+.routemaker-menu {
+  display: flex;
+  flex-direction: column;
+  background-color: green;
+  flex: 1;
+  margin-right: 10px;
+}
+
+.routemaker-map {
+  height: 100%;
+  width: 100%;
+  background-color: green;
+  padding: 10px;
+  flex: 3;
+  margin-left:10px;
 }
