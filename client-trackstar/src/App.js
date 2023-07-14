@@ -32,7 +32,7 @@ function App() {
       click: (e) => {
         var lat = e.latlng.lat
         var lng = e.latlng.lng
-        setMarkersPos([...markersPos, [lat, lng]])
+        creatingRoute && setMarkersPos([...markersPos, [lat, lng]])
       },
     })
 
@@ -51,6 +51,10 @@ function App() {
         setMapCenter([parseFloat(lat), parseFloat(lon)])
       }
     }
+  }
+
+  const toggleCreatingRoute = () => {
+    creatingRoute ? setCreatingRoute(false) : setCreatingRoute(true);
   }
 
   function CenterMap() {
@@ -89,7 +93,7 @@ function App() {
       <div className="routemaker-form">
         <input id='map-location' type='text' placeholder='Location' value={searchLocation} 
         onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
-        <span>Option 2</span>
+        <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
       </div>
 
     </div>
