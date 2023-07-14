@@ -22,7 +22,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function App() {
-  const [markersPos, setMarkersPos] = useState([[0, 0]])
+  const [markersPos, setMarkersPos] = useState([])
   const [mapCenter, setMapCenter] = useState([43.5588, -79.7116])
   const [searchLocation, setSearchLocation] = useState('')
   const [creatingRoute, setCreatingRoute] = useState(false)
@@ -37,6 +37,12 @@ function App() {
     })
 
     return null
+  }
+
+  const undoMarker = () => {
+    let newMarkersPos = [...markersPos];
+    if (newMarkersPos.length > 0) newMarkersPos.pop();
+    setMarkersPos(newMarkersPos);
   }
 
   const handleSearchLocationChange = (e) => {
@@ -91,9 +97,10 @@ function App() {
       </div>
 
       <div className="routemaker-form">
-        <input id='map-location' type='text' placeholder='Location' value={searchLocation} 
+        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation} 
         onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
+        {creatingRoute && <button onClick={undoMarker}>Undo Last Point</button>}
       </div>
 
     </div>
