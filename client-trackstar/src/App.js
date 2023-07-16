@@ -1,7 +1,7 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker } from 'react-leaflet'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -39,6 +39,16 @@ function App() {
     return null
   }
 
+  function MoveMap() {
+    const map = useMap()
+    useMapEvents({
+      moveend: () => {
+        const { lat, lng } = map.getCenter()
+        setMapCenter([lat,lng])
+      }
+    })
+  }
+
   const undoMarker = () => {
     let newMarkersPos = [...markersPos];
     if (newMarkersPos.length > 0) newMarkersPos.pop();
@@ -63,9 +73,11 @@ function App() {
     creatingRoute ? setCreatingRoute(false) : setCreatingRoute(true);
   }
 
+
   function CenterMap() {
     const map = useMap();
     map.flyTo(mapCenter, map.getZoom());
+
     return null;
   }
 
@@ -81,7 +93,7 @@ function App() {
       </nav>
 
       <div className="routemaker-map">
-        <MapContainer center={mapCenter} zoom={13} zoomControl={false}
+        <MapContainer center={[43.5588, -79.7116]} zoom={13} zoomControl={false}
           style={{ height: "100vh", width: "100%" }} >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -93,12 +105,13 @@ function App() {
             return <Marker key={[...marker]} position={[...marker]} />
           })}
           <CenterMap />
+          <MoveMap />
         </MapContainer>
       </div>
 
       <div className="routemaker-form">
-        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation} 
-        onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
+        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
+          onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
         {creatingRoute && markersPos.length > 0 && <button onClick={undoMarker}>Undo Last Point</button>}
       </div>
