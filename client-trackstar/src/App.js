@@ -100,7 +100,7 @@ function App() {
         <input id='map-location' type='text' placeholder='Set Location' value={searchLocation} 
         onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
-        {creatingRoute && <button onClick={undoMarker}>Undo Last Point</button>}
+        {creatingRoute && markersPos.length > 0 && <button onClick={undoMarker}>Undo Last Point</button>}
       </div>
 
     </div>
