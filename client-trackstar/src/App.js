@@ -1,7 +1,7 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker } from 'react-leaflet'
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
