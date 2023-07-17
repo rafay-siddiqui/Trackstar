@@ -38,7 +38,6 @@ function App() {
   const [searchLocation, setSearchLocation] = useState('')
   const [creatingRoute, setCreatingRoute] = useState(false)
   const [placingPoint, setPlacingPoint] = useState(false);
-  const [pathCoordinates, setPathCoordinates] = useState(null);
   const [pointSnapping, setPointSnapping] = useState(true);
 
   function CreateMarker() {
@@ -113,6 +112,7 @@ function App() {
   }
 
   useEffect(() => {
+    //  Distance calculation of path-restricted route (OSRM is missing walkways)
     // const fetchPath = async () => {
     //   let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
     //   const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
@@ -128,6 +128,7 @@ function App() {
       return totalDistance;
     }
     if (markersPos.length > 1) {
+      //  Distance calculation of path-restricted route
       // fetchPath()
       console.log(getTotalDistance(markersPos))
     }
@@ -249,8 +250,6 @@ function App() {
             <button onClick={resetMarkers}>Reset Route</button>
           </div>}
       </div>
-
-      {!!pathCoordinates && console.log(pathCoordinates)}
 
     </div>
   );
