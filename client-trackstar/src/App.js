@@ -32,13 +32,14 @@ let LoadingIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function App() {
-  const [markersPos, setMarkersPos] = useState([])
-  const [loadingPos, setLoadingPos] = useState([])
-  const [mapCenter, setMapCenter] = useState([43.5588, -79.7116])
-  const [searchLocation, setSearchLocation] = useState('')
-  const [creatingRoute, setCreatingRoute] = useState(false)
+  const [markersPos, setMarkersPos] = useState([]);
+  const [loadingPos, setLoadingPos] = useState([]);
+  const [mapCenter, setMapCenter] = useState([43.5588, -79.7116]);
+  const [searchLocation, setSearchLocation] = useState('');
+  const [creatingRoute, setCreatingRoute] = useState(false);
   const [placingPoint, setPlacingPoint] = useState(false);
   const [pointSnapping, setPointSnapping] = useState(true);
+  const [pathDistance, setPathDistance] = useState(0);
 
   function CreateMarker() {
     useMapEvents({
@@ -130,7 +131,8 @@ function App() {
     if (markersPos.length > 1) {
       //  Distance calculation of path-restricted route
       // fetchPath()
-      console.log(getTotalDistance(markersPos))
+      setPathDistance(getTotalDistance(markersPos))
+      console.log(pathDistance)
     }
   }, [markersPos])
 
@@ -249,6 +251,7 @@ function App() {
             <button onClick={undoMarker}>Undo Last Point</button>
             <button onClick={resetMarkers}>Reset Route</button>
           </div>}
+          <h4 style={{padding: '0px', margin: '0px', marginTop: '10px'}}>Distance: {pathDistance.toFixed(3)} km</h4>
       </div>
 
     </div>
