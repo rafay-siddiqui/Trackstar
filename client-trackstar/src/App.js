@@ -1,6 +1,6 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
-import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker, Polyline } from 'react-leaflet'
 import { useState, useEffect } from 'react';
 
 import L from 'leaflet';
@@ -235,6 +235,7 @@ function App() {
             return <Marker key={[...marker]} position={[...marker]} icon={LoadingIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
+          <Polyline positions={markersPos} color='red' />
           <CenterMap center={mapCenter} />
           <MoveMap />
         </MapContainer>
