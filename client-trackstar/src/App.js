@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import loadingIconUrl from './images/loading-marker-200px.gif'
 
 import axios from 'axios'
 
@@ -19,10 +20,20 @@ let DefaultIcon = L.icon({
   popupAnchor: [0, -41]
 });
 
+let LoadingIcon = L.icon({
+  iconUrl: loadingIconUrl,
+  iconSize: [25, 41],
+  shadowSize: [41, 41],
+  iconAnchor: [12, 41],
+  shadowAnchor: [14, 41],
+  popupAnchor: [0, -41]
+})
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function App() {
   const [markersPos, setMarkersPos] = useState([])
+  const [loadingPos, setLoadingPos] = useState([])
   const [mapCenter, setMapCenter] = useState([43.5588, -79.7116])
   const [searchLocation, setSearchLocation] = useState('')
   const [creatingRoute, setCreatingRoute] = useState(false)
@@ -35,9 +46,11 @@ function App() {
           setPlacingPoint(true)
           var lat = e.latlng.lat
           var lng = e.latlng.lng
+          setLoadingPos([lat,lng])
 
           const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
           if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
+            setLoadingPos([])
             const snappedCoordinates = response.data.waypoints[0].location;
             const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
             const isMarkerDuplicate = markersPos.some(
@@ -48,6 +61,7 @@ function App() {
             setPlacingPoint(false)
           } else {
             console.error("Could not get snapped coordinates from OSRM.");
+            setLoadingPos([])
             setPlacingPoint(false)
           }
         }
@@ -126,6 +140,7 @@ function App() {
           {markersPos.map((marker) => {
             return <Marker key={[...marker]} position={[...marker]} />
           })}
+          {loadingPos.length>0 && <Marker position={[...loadingPos]} icon={LoadingIcon}/>}
           <CenterMap center={mapCenter} />
           <MoveMap />
         </MapContainer>
