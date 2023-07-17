@@ -1,7 +1,7 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker } from 'react-leaflet'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -29,10 +29,24 @@ function App() {
 
   function CreateMarker() {
     useMapEvents({
-      click: (e) => {
-        var lat = e.latlng.lat
-        var lng = e.latlng.lng
-        creatingRoute && setMarkersPos([...markersPos, [lat, lng]])
+      click: async (e) => {
+        if (creatingRoute) {
+          var lat = e.latlng.lat
+          var lng = e.latlng.lng
+
+          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
+          if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
+            const snappedCoordinates = response.data.waypoints[0].location;
+            const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
+            const isMarkerDuplicate = markersPos.some(
+              pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
+            );
+            if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
+            if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
+          } else {
+            console.error("Could not get snapped coordinates from OSRM.");
+          }
+        }
       },
     })
 
@@ -44,7 +58,7 @@ function App() {
     useMapEvents({
       moveend: () => {
         const { lat, lng } = map.getCenter()
-        setMapCenter([lat,lng])
+        setMapCenter([lat, lng])
       }
     })
   }
@@ -74,9 +88,11 @@ function App() {
   }
 
 
-  function CenterMap() {
+  function CenterMap({ center }) {
     const map = useMap();
-    map.flyTo(mapCenter, map.getZoom());
+    useEffect(() => {
+      map.flyTo(center, map.getZoom());
+    }, [center, map]);
 
     return null;
   }
@@ -104,7 +120,7 @@ function App() {
           {markersPos.map((marker) => {
             return <Marker key={[...marker]} position={[...marker]} />
           })}
-          <CenterMap />
+          <CenterMap center={mapCenter} />
           <MoveMap />
         </MapContainer>
       </div>
