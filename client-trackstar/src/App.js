@@ -49,7 +49,7 @@ function App() {
           var lng = e.latlng.lng
           setLoadingPos([lat, lng])
 
-          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/bike/${lng},${lat}`);
+          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
           if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
             setLoadingPos([])
             const snappedCoordinates = response.data.waypoints[0].location;
@@ -74,10 +74,10 @@ function App() {
 
   useEffect(() => {
     const fetchPath = async () => {
-      let posString = markersPos.map(point => `${point[0]},${point[1]}`).join(';')
+      let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
       const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
       if (response.status === 200) {
-        setPathCoordinates(response.data)
+        setPathCoordinates(response.data.routes[0].distance)
       } else console.error("Could not get route path from OSRM.")
     }
     if (markersPos.length > 1) {
