@@ -132,7 +132,6 @@ function App() {
       //  Distance calculation of path-restricted route
       // fetchPath()
       setPathDistance(getTotalDistance(markersPos))
-      console.log(pathDistance)
     }
   }, [markersPos])
 
