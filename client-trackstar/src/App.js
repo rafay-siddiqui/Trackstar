@@ -39,6 +39,7 @@ function App() {
   const [creatingRoute, setCreatingRoute] = useState(false)
   const [placingPoint, setPlacingPoint] = useState(false);
   const [pathCoordinates, setPathCoordinates] = useState(null);
+  const [pointSnapping, setPointSnapping] = useState(true);
 
   function CreateMarker() {
     useMapEvents({
@@ -47,13 +48,9 @@ function App() {
           setPlacingPoint(true)
           var lat = e.latlng.lat
           var lng = e.latlng.lng
-          setLoadingPos([lat, lng])
 
-          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
-          if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
-            setLoadingPos([])
-            const snappedCoordinates = response.data.waypoints[0].location;
-            const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
+          if (!pointSnapping) {
+            const newMarkerPos = [lat, lng];
             const isMarkerDuplicate = markersPos.some(
               pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
             );
@@ -61,9 +58,24 @@ function App() {
             if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
             setPlacingPoint(false)
           } else {
-            console.error("Could not get snapped coordinates from OSRM.");
-            setLoadingPos([])
-            setPlacingPoint(false)
+            setLoadingPos([lat, lng])
+
+            const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
+            if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
+              setLoadingPos([])
+              const snappedCoordinates = response.data.waypoints[0].location;
+              const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
+              const isMarkerDuplicate = markersPos.some(
+                pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
+              );
+              if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
+              if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
+              setPlacingPoint(false)
+            } else {
+              console.error("Could not get snapped coordinates from OSRM.");
+              setLoadingPos([])
+              setPlacingPoint(false)
+            }
           }
         }
       },
@@ -72,16 +84,52 @@ function App() {
     return null
   }
 
+  const haversineDistance = (coords1, coords2, isMiles = false) => {
+    const toRad = (x) => {
+      return x * Math.PI / 180;
+    }
+  
+    var lon1 = coords1[1];
+    var lat1 = coords1[0];
+  
+    var lon2 = coords2[1];
+    var lat2 = coords2[0];
+  
+    var R = 6371; // km
+  
+    var x1 = lat2 - lat1;
+    var dLat = toRad(x1);
+    var x2 = lon2 - lon1;
+    var dLon = toRad(x2)
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    var d = R * c;
+  
+    if(isMiles) d /= 1.60934;
+  
+    return d;
+  }
+
   useEffect(() => {
-    const fetchPath = async () => {
-      let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
-      const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
-      if (response.status === 200) {
-        setPathCoordinates(response.data.routes[0].distance)
-      } else console.error("Could not get route path from OSRM.")
+    // const fetchPath = async () => {
+    //   let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
+    //   const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
+    //   if (response.status === 200) {
+    //     setPathCoordinates(response.data.routes[0].distance)
+    //   } else console.error("Could not get route path from OSRM.")
+    // }
+    const getTotalDistance = (points) => {
+      let totalDistance = 0
+      for (let i=0; i < points.length-1; i++) {
+        totalDistance += haversineDistance(points[i], points[i+1])
+      }
+      return totalDistance;
     }
     if (markersPos.length > 1) {
-      fetchPath()
+      // fetchPath()
+      console.log(getTotalDistance(markersPos))
     }
   }, [markersPos])
 
@@ -135,6 +183,31 @@ function App() {
     return null;
   }
 
+  function PointSnappingToggle() {
+    return (
+      <div style={{ display: 'flex' }}>
+        <label>
+          <input
+            type="radio"
+            value="snap"
+            checked={pointSnapping}
+            onChange={() => setPointSnapping(true)}
+          />
+          Snap to Road
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="place"
+            checked={!pointSnapping}
+            onChange={() => setPointSnapping(false)}
+          />
+          Place Anywhere
+        </label>
+      </div>
+    );
+  }
+
   return (
     <div className='App'>
       <nav className="navbar">
@@ -169,6 +242,7 @@ function App() {
         <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
           onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
+        {creatingRoute && <PointSnappingToggle />}
         {creatingRoute && markersPos.length > 0 &&
           <div>
             <button onClick={undoMarker}>Undo Last Point</button>
