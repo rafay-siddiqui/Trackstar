@@ -26,11 +26,13 @@ function App() {
   const [mapCenter, setMapCenter] = useState([43.5588, -79.7116])
   const [searchLocation, setSearchLocation] = useState('')
   const [creatingRoute, setCreatingRoute] = useState(false)
+  const [placingPoint, setPlacingPoint] = useState(false);
 
   function CreateMarker() {
     useMapEvents({
       click: async (e) => {
-        if (creatingRoute) {
+        if (creatingRoute && !placingPoint) {
+          setPlacingPoint(true)
           var lat = e.latlng.lat
           var lng = e.latlng.lng
 
@@ -43,8 +45,10 @@ function App() {
             );
             if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
             if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
+            setPlacingPoint(false)
           } else {
             console.error("Could not get snapped coordinates from OSRM.");
+            setPlacingPoint(false)
           }
         }
       },
@@ -57,8 +61,10 @@ function App() {
     const map = useMap()
     useMapEvents({
       moveend: () => {
-        const { lat, lng } = map.getCenter()
-        setMapCenter([lat, lng])
+        const newCenter = [map.getCenter().lat, map.getCenter().lng];
+        if (newCenter[0] !== mapCenter[0] || newCenter[1] !== mapCenter[1]) {
+          setMapCenter(newCenter);
+        }
       }
     })
   }
