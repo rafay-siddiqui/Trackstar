@@ -38,6 +38,7 @@ function App() {
   const [searchLocation, setSearchLocation] = useState('')
   const [creatingRoute, setCreatingRoute] = useState(false)
   const [placingPoint, setPlacingPoint] = useState(false);
+  const [pathCoordinates, setPathCoordinates] = useState(null);
 
   function CreateMarker() {
     useMapEvents({
@@ -46,9 +47,9 @@ function App() {
           setPlacingPoint(true)
           var lat = e.latlng.lat
           var lng = e.latlng.lng
-          setLoadingPos([lat,lng])
+          setLoadingPos([lat, lng])
 
-          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
+          const response = await axios.get(`http://router.project-osrm.org/nearest/v1/bike/${lng},${lat}`);
           if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
             setLoadingPos([])
             const snappedCoordinates = response.data.waypoints[0].location;
@@ -71,6 +72,19 @@ function App() {
     return null
   }
 
+  useEffect(() => {
+    const fetchPath = async () => {
+      let posString = markersPos.map(point => `${point[0]},${point[1]}`).join(';')
+      const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
+      if (response.status === 200) {
+        setPathCoordinates(response.data)
+      } else console.error("Could not get route path from OSRM.")
+    }
+    if (markersPos.length > 1) {
+      fetchPath()
+    }
+  }, [markersPos])
+
   function MoveMap() {
     const map = useMap()
     useMapEvents({
@@ -87,6 +101,10 @@ function App() {
     let newMarkersPos = [...markersPos];
     if (newMarkersPos.length > 0) newMarkersPos.pop();
     setMarkersPos(newMarkersPos);
+  }
+
+  const resetMarkers = () => {
+    setMarkersPos([])
   }
 
   const handleSearchLocationChange = (e) => {
@@ -137,10 +155,11 @@ function App() {
           />
           <ZoomControl position='bottomright' />
           <CreateMarker />
-          {markersPos.map((marker) => {
-            return <Marker key={[...marker]} position={[...marker]} />
+          {markersPos.map((marker, idx) => {
+            if (idx === 0 || idx === markersPos.length - 1) return <Marker key={[...marker]} position={[...marker]} />
+            return <Marker key={[...marker]} position={[...marker]} icon={LoadingIcon} />
           })}
-          {loadingPos.length>0 && <Marker position={[...loadingPos]} icon={LoadingIcon}/>}
+          {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <CenterMap center={mapCenter} />
           <MoveMap />
         </MapContainer>
@@ -150,8 +169,14 @@ function App() {
         <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
           onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
-        {creatingRoute && markersPos.length > 0 && <button onClick={undoMarker}>Undo Last Point</button>}
+        {creatingRoute && markersPos.length > 0 &&
+          <div>
+            <button onClick={undoMarker}>Undo Last Point</button>
+            <button onClick={resetMarkers}>Reset Route</button>
+          </div>}
       </div>
+
+      {!!pathCoordinates && console.log(pathCoordinates)}
 
     </div>
   );
