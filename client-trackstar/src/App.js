@@ -36,6 +36,7 @@ function App() {
   const [loadingPos, setLoadingPos] = useState([]);
   const [mapCenter, setMapCenter] = useState([43.5588, -79.7116]);
   const [searchLocation, setSearchLocation] = useState('');
+  const [locationLoading, setLocationLoading] = useState(false);
   const [creatingRoute, setCreatingRoute] = useState(false);
   const [placingPoint, setPlacingPoint] = useState(false);
   const [pointSnapping, setPointSnapping] = useState(true);
@@ -124,7 +125,7 @@ function App() {
     if (markersPos.length > 1) {
       if (unitType === "km") {
         setPathDistance(getTotalDistance(markersPos))
-      } else if (unitType === "miles"){
+      } else if (unitType === "miles") {
         setPathDistance(getTotalDistance(markersPos) * 0.621371)
       }
     }
@@ -157,11 +158,18 @@ function App() {
   }
 
   const handleLocationSearch = async (e) => {
-    if (e.key === 'Enter') {
-      const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}`)
-      if (response.data[0]) {
-        const { lat, lon } = response.data[0];
-        setMapCenter([parseFloat(lat), parseFloat(lon)])
+    if (locationLoading === false) {
+      if (e.key === 'Enter') {
+        setLocationLoading(true)
+        const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}`)
+        if (response.data[0]) {
+          const { lat, lon } = response.data[0];
+          setMapCenter([parseFloat(lat), parseFloat(lon)])
+          setLocationLoading(false)
+        } else {
+          console.error("unable to fetch location")
+          setLocationLoading(false)
+        }
       }
     }
   }
