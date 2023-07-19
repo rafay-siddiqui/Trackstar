@@ -114,18 +114,6 @@ function App() {
   }
 
   useEffect(() => {
-    //  Distance calculation of path-restricted route (OSRM is missing walkways)
-    // const fetchPath = async () => {
-    //   let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
-    //   const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
-    //   if (response.status === 200) {
-    //     const routePoints = response.data.waypoints.map((waypoint) => {
-    //       return [waypoint.location[1],waypoint.location[0]]
-    //     })
-    //     setPathCoordinates(routePoints)
-    //     console.log(routePoints)
-    //   } else console.error("Could not get route path from OSRM.")
-    // }
     const getTotalDistance = (points) => {
       let totalDistance = 0
       for (let i = 0; i < points.length - 1; i++) {
@@ -134,8 +122,6 @@ function App() {
       return totalDistance;
     }
     if (markersPos.length > 1) {
-      //  Distance calculation of path-restricted route
-      // fetchPath()
       if (unitType === "km") {
         setPathDistance(getTotalDistance(markersPos))
       } else if (unitType === "miles"){
