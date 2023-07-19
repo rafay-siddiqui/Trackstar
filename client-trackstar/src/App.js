@@ -185,6 +185,7 @@ function App() {
     setUnitType(allRoutes[routeName].unitType)
     setMapCenter(allRoutes[routeName].mapCenter)
     setCreatingRoute(false)
+    setShowCreate(true)
   }
 
   const handleSearchLocationChange = (e) => {
@@ -297,6 +298,9 @@ function App() {
           <button onClick={() => setShowCreate(true)}>Create Route</button>
           <button onClick={() => setShowCreate(false)}>Load Route</button>
         </div>
+        {!showCreate && Object.keys(allRoutes).length > 0 && Object.keys(allRoutes).map((route, idx) => {
+            return <button onClick={() => loadRoute(route)} key={idx}>{route}</button>
+          })}
         {showCreate && <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
@@ -314,9 +318,6 @@ function App() {
             <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
               < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>Save Route</button>
           </div>
-          {Object.keys(allRoutes).length > 0 && Object.keys(allRoutes).map((route, idx) => {
-            return <button onClick={() => loadRoute(route)} key={idx}>{route}</button>
-          })}
         </div>}
       </div>
 
