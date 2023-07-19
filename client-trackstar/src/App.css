@@ -41,16 +41,20 @@
   z-index: -1;
 }
 
-.routemaker-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+.route-options {
   position: absolute;
   top: 100px;
   left: 50px;
   padding: 20px;
   z-index: 1;
   background-color: rgba(50,200,50,0.8);
+  text-align: center;
+}
+
+.routemaker-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 #map-location {
@@ -64,5 +68,5 @@
   z-index: 2;
   position: absolute;
   top: 40%;
-  left: 40%;
+  left: 45%;
 }

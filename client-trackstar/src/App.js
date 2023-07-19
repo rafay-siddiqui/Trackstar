@@ -1,7 +1,7 @@
 import './App.css';
 import 'leaflet/dist/leaflet.css'
 import { MapContainer, TileLayer, ZoomControl, useMap, useMapEvents, Marker, Polyline } from 'react-leaflet'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -42,6 +42,10 @@ function App() {
   const [pointSnapping, setPointSnapping] = useState(true);
   const [pathDistance, setPathDistance] = useState(0);
   const [unitType, setUnitType] = useState('km');
+  const [allRoutes, setAllRoutes] = useState({});
+  const [routeName, setRouteName] = useState('')
+  const routeNameInputRef = useRef(null);
+  const [showCreate, setShowCreate] = useState(true);
 
   function CreateMarker() {
     useMapEvents({
@@ -57,7 +61,6 @@ function App() {
               pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
             );
             if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
-            if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
             setPlacingPoint(false)
           } else {
             setLoadingPos([lat, lng])
@@ -71,7 +74,6 @@ function App() {
                 pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
               );
               if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
-              if (!isMarkerDuplicate) console.log('placed ' + newMarkerPos)
               setPlacingPoint(false)
             } else {
               console.error("Could not get snapped coordinates from OSRM.");
@@ -149,8 +151,40 @@ function App() {
     setMarkersPos(newMarkersPos);
   }
 
-  const resetMarkers = () => {
+  const resetRoute = () => {
     setMarkersPos([])
+    setLoadingPos([]);
+    setPathDistance(0)
+  }
+
+  const saveRoute = () => {
+    if (routeName.length < 1 || markersPos.length < 2) {
+      routeNameInputRef.current.focus()
+    } else if (routeName.length > 0) {
+      let newAllRoutes = { ...allRoutes }
+      newAllRoutes[routeName] = {
+        markersPos: markersPos,
+        pathDistance: pathDistance,
+        unitType: unitType,
+        mapCenter: [(markersPos[0][0] + markersPos[markersPos.length - 1][0]) / 2,
+        (markersPos[0][1] + markersPos[markersPos.length - 1][1]) / 2]
+      }
+      setAllRoutes(newAllRoutes)
+      setRouteName('')
+      resetRoute()
+      setCreatingRoute(false)
+      setPointSnapping(true)
+    }
+    console.log(Object.keys(allRoutes))
+    console.log(allRoutes[Object.keys(allRoutes)[Object.keys(allRoutes).length - 1]])
+  }
+
+  const loadRoute = (routeName) => {
+    setMarkersPos(allRoutes[routeName].markersPos)
+    setPathDistance(allRoutes[routeName].pathDistance)
+    setUnitType(allRoutes[routeName].unitType)
+    setMapCenter(allRoutes[routeName].mapCenter)
+    setCreatingRoute(false)
   }
 
   const handleSearchLocationChange = (e) => {
@@ -163,7 +197,6 @@ function App() {
         setLocationLoading(true)
         const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}`)
         if (response.data[0]) {
-          console.log("retrieved location")
           const { lat, lon } = response.data[0];
           setMapCenter([parseFloat(lat), parseFloat(lon)])
           setLocationLoading(false)
@@ -175,10 +208,13 @@ function App() {
     }
   }
 
+  const handleRouteNameChange = (e) => {
+    setRouteName(e.target.value)
+  }
+
   const toggleCreatingRoute = () => {
     creatingRoute ? setCreatingRoute(false) : setCreatingRoute(true);
   }
-
 
   function CenterMap({ center }) {
     const map = useMap();
@@ -256,20 +292,35 @@ function App() {
         </MapContainer>
       </div>
 
-      <div className="routemaker-form">
-        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
-          onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
-        <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
-        <PointSnappingToggle />
+      <div className="route-options">
         <div>
-          <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
-          <button onClick={resetMarkers} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+          <button onClick={() => setShowCreate(true)}>Create Route</button>
+          <button onClick={() => setShowCreate(false)}>Load Route</button>
         </div>
-        <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
-          <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
-        </h4>
+        {showCreate && <div className="routemaker-form">
+          <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
+            onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
+          <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
+          <PointSnappingToggle />
+          <div>
+            <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
+            <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+          </div>
+          <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
+            <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
+          </h4>
+          <div>
+            <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
+            <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
+              < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>Save Route</button>
+          </div>
+          {Object.keys(allRoutes).length > 0 && Object.keys(allRoutes).map((route, idx) => {
+            return <button onClick={() => loadRoute(route)} key={idx}>{route}</button>
+          })}
+        </div>}
       </div>
-      {locationLoading && <img className="loading-location" src={loadingIconUrl} alt="Loading Location..."/>}
+
+      {locationLoading && <img className="loading-location" src={loadingIconUrl} alt="Loading Location..." />}
 
     </div>
   );
