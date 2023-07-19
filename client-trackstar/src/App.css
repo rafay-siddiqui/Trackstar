@@ -59,3 +59,10 @@
   text-align: center;
   margin: 5px;
 }
+
+.loading-location {
+  z-index: 2;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}

@@ -129,7 +129,7 @@ function App() {
         setPathDistance(getTotalDistance(markersPos) * 0.621371)
       }
     }
-  }, [markersPos])
+  }, [markersPos, unitType])
 
   function MoveMap() {
     const map = useMap()
@@ -163,6 +163,7 @@ function App() {
         setLocationLoading(true)
         const response = await axios.get(`https://nominatim.openstreetmap.org/search?format=json&q=${e.target.value}`)
         if (response.data[0]) {
+          console.log("retrieved location")
           const { lat, lon } = response.data[0];
           setMapCenter([parseFloat(lat), parseFloat(lon)])
           setLocationLoading(false)
@@ -217,13 +218,9 @@ function App() {
 
   const toggleUnitType = () => {
     if (unitType === 'km') {
-      const newPathDistance = pathDistance * 0.621371
-      setPathDistance(newPathDistance)
       setUnitType('miles')
     }
     if (unitType === 'miles') {
-      const newPathDistance = pathDistance * 1.60934
-      setPathDistance(newPathDistance)
       setUnitType('km')
     }
   }
@@ -272,6 +269,7 @@ function App() {
           <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
         </h4>
       </div>
+      {locationLoading && <img className="loading-location" src={loadingIconUrl} alt="Loading Location..."/>}
 
     </div>
   );
