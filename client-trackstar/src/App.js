@@ -40,6 +40,7 @@ function App() {
   const [placingPoint, setPlacingPoint] = useState(false);
   const [pointSnapping, setPointSnapping] = useState(true);
   const [pathDistance, setPathDistance] = useState(0);
+  const [unitType, setUnitType] = useState('km');
 
   function CreateMarker() {
     useMapEvents({
@@ -88,15 +89,15 @@ function App() {
     const toRad = (x) => {
       return x * Math.PI / 180;
     }
-  
+
     var lon1 = coords1[1];
     var lat1 = coords1[0];
-  
+
     var lon2 = coords2[1];
     var lat2 = coords2[0];
-  
+
     var R = 6371; // km
-  
+
     var x1 = lat2 - lat1;
     var dLat = toRad(x1);
     var x2 = lon2 - lon1;
@@ -106,9 +107,9 @@ function App() {
       Math.sin(dLon / 2) * Math.sin(dLon / 2);
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     var d = R * c;
-  
-    if(isMiles) d /= 1.60934;
-  
+
+    if (isMiles) d /= 1.60934;
+
     return d;
   }
 
@@ -118,20 +119,28 @@ function App() {
     //   let posString = markersPos.map(point => `${point[1]},${point[0]}`).join(';')
     //   const response = await axios.get(`http://router.project-osrm.org/route/v1/bicycle/${posString}?continue_straight=true`)
     //   if (response.status === 200) {
-    //     setPathCoordinates(response.data.routes[0].distance)
+    //     const routePoints = response.data.waypoints.map((waypoint) => {
+    //       return [waypoint.location[1],waypoint.location[0]]
+    //     })
+    //     setPathCoordinates(routePoints)
+    //     console.log(routePoints)
     //   } else console.error("Could not get route path from OSRM.")
     // }
     const getTotalDistance = (points) => {
       let totalDistance = 0
-      for (let i=0; i < points.length-1; i++) {
-        totalDistance += haversineDistance(points[i], points[i+1])
+      for (let i = 0; i < points.length - 1; i++) {
+        totalDistance += haversineDistance(points[i], points[i + 1])
       }
       return totalDistance;
     }
     if (markersPos.length > 1) {
       //  Distance calculation of path-restricted route
       // fetchPath()
-      setPathDistance(getTotalDistance(markersPos))
+      if (unitType === "km") {
+        setPathDistance(getTotalDistance(markersPos))
+      } else if (unitType === "miles"){
+        setPathDistance(getTotalDistance(markersPos) * 0.621371)
+      }
     }
   }, [markersPos])
 
@@ -190,6 +199,7 @@ function App() {
       <div style={{ display: 'flex' }}>
         <label>
           <input
+            disabled={!creatingRoute}
             type="radio"
             value="snap"
             checked={pointSnapping}
@@ -199,6 +209,7 @@ function App() {
         </label>
         <label>
           <input
+            disabled={!creatingRoute}
             type="radio"
             value="place"
             checked={!pointSnapping}
@@ -208,6 +219,19 @@ function App() {
         </label>
       </div>
     );
+  }
+
+  const toggleUnitType = () => {
+    if (unitType === 'km') {
+      const newPathDistance = pathDistance * 0.621371
+      setPathDistance(newPathDistance)
+      setUnitType('miles')
+    }
+    if (unitType === 'miles') {
+      const newPathDistance = pathDistance * 1.60934
+      setPathDistance(newPathDistance)
+      setUnitType('km')
+    }
   }
 
   return (
@@ -245,13 +269,14 @@ function App() {
         <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
           onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch}></input>
         <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
-        {creatingRoute && <PointSnappingToggle />}
-        {creatingRoute && markersPos.length > 0 &&
-          <div>
-            <button onClick={undoMarker}>Undo Last Point</button>
-            <button onClick={resetMarkers}>Reset Route</button>
-          </div>}
-          <h4 style={{padding: '0px', margin: '0px', marginTop: '10px'}}>Distance: {pathDistance.toFixed(3)} km</h4>
+        <PointSnappingToggle />
+        <div>
+          <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
+          <button onClick={resetMarkers} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+        </div>
+        <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
+          <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
+        </h4>
       </div>
 
     </div>
