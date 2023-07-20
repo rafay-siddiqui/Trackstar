@@ -45,7 +45,6 @@ function App() {
   const [allRoutes, setAllRoutes] = useState({});
   const [routeName, setRouteName] = useState('')
   const routeNameInputRef = useRef(null);
-  const [showCreate, setShowCreate] = useState(true);
 
   function CreateMarker() {
     useMapEvents({
@@ -185,7 +184,6 @@ function App() {
     setUnitType(allRoutes[routeName].unitType)
     setMapCenter(allRoutes[routeName].mapCenter)
     setCreatingRoute(false)
-    setShowCreate(true)
   }
 
   const handleSearchLocationChange = (e) => {
@@ -202,7 +200,7 @@ function App() {
           setMapCenter([parseFloat(lat), parseFloat(lon)])
           setLocationLoading(false)
         } else {
-          console.error("unable to fetch location")
+          alert("Location not found")
           setLocationLoading(false)
         }
       }
@@ -294,31 +292,40 @@ function App() {
       </div>
 
       <div className="route-options">
-        <div>
-          <button onClick={() => setShowCreate(true)}>Create Route</button>
-          <button onClick={() => setShowCreate(false)}>Load Route</button>
-        </div>
-        {!showCreate && Object.keys(allRoutes).length > 0 && Object.keys(allRoutes).map((route, idx) => {
-            return <button onClick={() => loadRoute(route)} key={idx}>{route}</button>
-          })}
-        {showCreate && <div className="routemaker-form">
+
+        <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
           <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
+
           <PointSnappingToggle />
+
           <div>
             <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
             <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
           </div>
+
           <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
             <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
           </h4>
+
           <div>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
             <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
               < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>Save Route</button>
           </div>
-        </div>}
+
+          <div>
+            <select>
+              <option value="" disabled selected>Choose route to load</option>
+              {Object.keys(allRoutes).map((route, idx) => {
+                return <option onClick={() => loadRoute(route)} key={idx}>{route}</option>
+              })}
+            </select>
+            <button>Load Route</button>
+          </div>
+
+        </div>
       </div>
 
       {locationLoading && <img className="loading-location" src={loadingIconUrl} alt="Loading Location..." />}
