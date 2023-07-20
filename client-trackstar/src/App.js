@@ -187,7 +187,6 @@ function App() {
       setUnitType(allRoutes[routeName].unitType)
       setMapCenter(allRoutes[routeName].mapCenter)
       setCreatingRoute(false)
-      setSelectedRoute("")
     }
   }
 
