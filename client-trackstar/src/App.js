@@ -45,6 +45,8 @@ function App() {
   const [allRoutes, setAllRoutes] = useState({});
   const [routeName, setRouteName] = useState('')
   const routeNameInputRef = useRef(null);
+  const [selectedRoute, setSelectedRoute] = useState("")
+  const loadRouteRef = useRef(null);
 
   function CreateMarker() {
     useMapEvents({
@@ -174,16 +176,19 @@ function App() {
       setCreatingRoute(false)
       setPointSnapping(true)
     }
-    console.log(Object.keys(allRoutes))
-    console.log(allRoutes[Object.keys(allRoutes)[Object.keys(allRoutes).length - 1]])
   }
 
   const loadRoute = (routeName) => {
-    setMarkersPos(allRoutes[routeName].markersPos)
-    setPathDistance(allRoutes[routeName].pathDistance)
-    setUnitType(allRoutes[routeName].unitType)
-    setMapCenter(allRoutes[routeName].mapCenter)
-    setCreatingRoute(false)
+    if (!selectedRoute) {
+      loadRouteRef.current.focus();
+    } else {
+      setMarkersPos(allRoutes[routeName].markersPos)
+      setPathDistance(allRoutes[routeName].pathDistance)
+      setUnitType(allRoutes[routeName].unitType)
+      setMapCenter(allRoutes[routeName].mapCenter)
+      setCreatingRoute(false)
+      setSelectedRoute("")
+    }
   }
 
   const handleSearchLocationChange = (e) => {
@@ -306,7 +311,7 @@ function App() {
           </div>
 
           <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
-            <button style={{ marginLeft: "5px", padding: "0px", backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
+            <button style={{ marginLeft: "5px", padding: "0px", cursor: 'pointer', backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
           </h4>
 
           <div>
@@ -316,13 +321,14 @@ function App() {
           </div>
 
           <div>
-            <select>
-              <option value="" disabled selected>Choose route to load</option>
+            <select ref={loadRouteRef} value={selectedRoute} onChange={(e) => { setSelectedRoute(e.target.value) }}>
+              <option value='' disabled>Choose route to load</option>
               {Object.keys(allRoutes).map((route, idx) => {
-                return <option onClick={() => loadRoute(route)} key={idx}>{route}</option>
+                return <option key={idx}>{route}</option>
               })}
             </select>
-            <button>Load Route</button>
+            <button onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
+               { opacity: 0.5, cursor: 'not-allowed' } : {}}>Load Route</button>
           </div>
 
         </div>
