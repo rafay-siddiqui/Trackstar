@@ -57,9 +57,17 @@ function App() {
   const routeNameInputRef = useRef(null);
   const [selectedRoute, setSelectedRoute] = useState("")
   const loadRouteRef = useRef(null);
+  const [selectedActivity, setSelectedActivity] = useState('walking')
+
+  const getActivityType = () => {
+    if (selectedActivity === 'walking' || selectedActivity === 'running') {
+      return 'foot'
+    } else if (selectedActivity === 'biking') { return 'bike' }
+  }
 
   const getSnappedRoute = async (start, end) => {
-    const response = await axios.get(`http://router.project-osrm.org/route/v1/foot/${start[0]},${start[1]};${end[1]},${end[0]}?geometries=polyline`);
+    const apiActivity = getActivityType()
+    const response = await axios.get(`http://router.project-osrm.org/route/v1/${apiActivity}/${start[0]},${start[1]};${end[1]},${end[0]}?geometries=polyline`);
     if (response.status === 200 && response.data.routes && response.data.routes.length > 0) {
       const polyline = response.data.routes[0].geometry;
       setLoadingPos([])
@@ -74,6 +82,7 @@ function App() {
   }
 
   function CreateMarker() {
+    const apiActivity = getActivityType()
     useMapEvents({
       click: async (e) => {
         if (creatingRoute && !placingPoint) {
@@ -91,7 +100,7 @@ function App() {
           } else {
             setLoadingPos([lat, lng])
 
-            const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
+            const response = await axios.get(`http://router.project-osrm.org/nearest/v1/${apiActivity}/${lng},${lat}`);
             if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
               const snappedCoordinates = response.data.waypoints[0].location;
               const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
@@ -182,7 +191,7 @@ function App() {
     let newMarkersPos = [...markersPos];
     if (newMarkersPos.length > 0) {
       newMarkersPos.pop();
-      while (newMarkersPos.length > 0 && newMarkersPos[newMarkersPos.length-1].length===3) {newMarkersPos.pop()}
+      while (newMarkersPos.length > 0 && newMarkersPos[newMarkersPos.length - 1].length === 3) { newMarkersPos.pop() }
     }
     setMarkersPos(newMarkersPos);
   }
@@ -290,6 +299,40 @@ function App() {
     );
   }
 
+  function ActivityToggle() {
+    return (
+      <div style={{ display: 'flex' }}>
+        <label>
+          <input
+            type="radio"
+            value="walk"
+            checked={selectedActivity === 'walking'}
+            onChange={() => setSelectedActivity('walking')}
+          />
+          Walking
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="run"
+            checked={selectedActivity === 'running'}
+            onChange={() => setSelectedActivity('running')}
+          />
+          Running
+        </label>
+        <label>
+          <input
+            type="radio"
+            value="bike"
+            checked={selectedActivity === 'biking'}
+            onChange={() => setSelectedActivity('biking')}
+          />
+          Biking
+        </label>
+      </div>
+    );
+  }
+
   const toggleUnitType = () => {
     if (unitType === 'km') {
       setUnitType('miles')
@@ -301,10 +344,9 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <div>
-        <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
-        <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
-      </div>
+      <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
+        <button style={{ marginLeft: "5px", padding: "0px", cursor: 'pointer', backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
+      </h4>
     )
   }
 
@@ -330,7 +372,7 @@ function App() {
           <CreateMarker />
           {markersPos.map((marker, idx) => {
             if (idx === 0 || idx === markersPos.length - 1) return <Marker key={idx} position={[...marker]} />
-            return <Marker key={idx} position={[...marker]} icon={marker.length===3 ? InvisibleIcon : LoadingIcon} />
+            return <Marker key={idx} position={[...marker]} icon={marker.length === 3 ? InvisibleIcon : LoadingIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
@@ -348,11 +390,16 @@ function App() {
 
           <PointSnappingToggle />
 
+          <div>
+            <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
+            <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+          </div>
+
           <DistanceDisplay />
 
-          <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
-            <button style={{ marginLeft: "5px", padding: "0px", cursor: 'pointer', backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
-          </h4>
+          <ActivityToggle />
+
+
 
           <div>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
