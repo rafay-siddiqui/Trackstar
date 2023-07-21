@@ -59,13 +59,10 @@ function App() {
   const loadRouteRef = useRef(null);
 
   const getSnappedRoute = async (start, end) => {
-    console.log(start, end)
-    console.log(`${start[0]},${start[1]};${end[0]},${end[1]}`)
     const response = await axios.get(`http://router.project-osrm.org/route/v1/foot/${start[0]},${start[1]};${end[1]},${end[0]}?geometries=polyline`);
     if (response.status === 200 && response.data.routes && response.data.routes.length > 0) {
       const polyline = response.data.routes[0].geometry;
       setLoadingPos([])
-      console.log('polyline is ' + decode(polyline))
       return decode(polyline).map(([latitude, longitude], idx) => {
         if (idx === decode(polyline).length - 1) {
           return [latitude, longitude]
@@ -123,10 +120,6 @@ function App() {
 
     return null
   }
-
-  useEffect(() => {
-    console.log(markersPos)
-  },[markersPos])
 
   const haversineDistance = (coords1, coords2, isMiles = false) => {
     const toRad = (x) => {
@@ -336,8 +329,8 @@ function App() {
           <ZoomControl position='bottomright' />
           <CreateMarker />
           {markersPos.map((marker, idx) => {
-            if (idx === 0 || idx === markersPos.length - 1) return <Marker key={[...marker]} position={[...marker]} />
-            return <Marker key={[...marker]} position={[...marker]} icon={marker.length===3 ? InvisibleIcon : LoadingIcon} />
+            if (idx === 0 || idx === markersPos.length - 1) return <Marker key={idx} position={[...marker]} />
+            return <Marker key={idx} position={[...marker]} icon={marker.length===3 ? InvisibleIcon : LoadingIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
