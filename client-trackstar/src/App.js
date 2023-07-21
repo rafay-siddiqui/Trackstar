@@ -64,14 +64,16 @@ function App() {
     const response = await axios.get(`http://router.project-osrm.org/route/v1/foot/${start[0]},${start[1]};${end[1]},${end[0]}?geometries=polyline`);
     if (response.status === 200 && response.data.routes && response.data.routes.length > 0) {
       const polyline = response.data.routes[0].geometry;
-      console.log('polyline is ' + polyline)
+      setLoadingPos([])
+      console.log('polyline is ' + decode(polyline))
       return decode(polyline).map(([latitude, longitude], idx) => {
-        if (idx === polyline.length - 1) {
+        if (idx === decode(polyline).length - 1) {
           return [latitude, longitude]
         }
         return [latitude, longitude, true]
       })
     } else { console.error("Could not snap route to road") }
+    setLoadingPos([])
   }
 
   function CreateMarker() {
@@ -94,7 +96,6 @@ function App() {
 
             const response = await axios.get(`http://router.project-osrm.org/nearest/v1/foot/${lng},${lat}`);
             if (response.status === 200 && response.data.waypoints && response.data.waypoints.length > 0) {
-              setLoadingPos([])
               const snappedCoordinates = response.data.waypoints[0].location;
               const newMarkerPos = [snappedCoordinates[1], snappedCoordinates[0]];
               const isMarkerDuplicate = markersPos.some(
@@ -122,6 +123,10 @@ function App() {
 
     return null
   }
+
+  useEffect(() => {
+    console.log(markersPos)
+  },[markersPos])
 
   const haversineDistance = (coords1, coords2, isMiles = false) => {
     const toRad = (x) => {
@@ -182,7 +187,10 @@ function App() {
 
   const undoMarker = () => {
     let newMarkersPos = [...markersPos];
-    if (newMarkersPos.length > 0) newMarkersPos.pop();
+    if (newMarkersPos.length > 0) {
+      newMarkersPos.pop();
+      while (newMarkersPos.length > 0 && newMarkersPos[newMarkersPos.length-1].length===3) {newMarkersPos.pop()}
+    }
     setMarkersPos(newMarkersPos);
   }
 
@@ -329,7 +337,7 @@ function App() {
           <CreateMarker />
           {markersPos.map((marker, idx) => {
             if (idx === 0 || idx === markersPos.length - 1) return <Marker key={[...marker]} position={[...marker]} />
-            return <Marker key={[...marker]} position={[...marker]} icon={marker[2] ? InvisibleIcon : LoadingIcon} />
+            return <Marker key={[...marker]} position={[...marker]} icon={marker.length===3 ? InvisibleIcon : LoadingIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
