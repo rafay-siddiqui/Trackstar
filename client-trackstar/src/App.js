@@ -9,6 +9,7 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import loadingIconUrl from './images/loading-marker-200px.gif'
 
 import axios from 'axios'
+import { decode } from '@mapbox/polyline';
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -29,6 +30,15 @@ let LoadingIcon = L.icon({
   popupAnchor: [0, -41]
 })
 
+let InvisibleIcon = L.icon({
+  iconUrl: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+  iconSize: [0, 0],
+  shadowSize: [0, 0],
+  iconAnchor: [0, 0],
+  shadowAnchor: [0, 0],
+  popupAnchor: [0, 0]
+});
+
 L.Marker.prototype.options.icon = DefaultIcon;
 
 function App() {
@@ -47,6 +57,22 @@ function App() {
   const routeNameInputRef = useRef(null);
   const [selectedRoute, setSelectedRoute] = useState("")
   const loadRouteRef = useRef(null);
+
+  const getSnappedRoute = async (start, end) => {
+    console.log(start, end)
+    console.log(`${start[0]},${start[1]};${end[0]},${end[1]}`)
+    const response = await axios.get(`http://router.project-osrm.org/route/v1/foot/${start[0]},${start[1]};${end[1]},${end[0]}?geometries=polyline`);
+    if (response.status === 200 && response.data.routes && response.data.routes.length > 0) {
+      const polyline = response.data.routes[0].geometry;
+      console.log('polyline is ' + polyline)
+      return decode(polyline).map(([latitude, longitude], idx) => {
+        if (idx === polyline.length - 1) {
+          return [latitude, longitude]
+        }
+        return [latitude, longitude, true]
+      })
+    } else { console.error("Could not snap route to road") }
+  }
 
   function CreateMarker() {
     useMapEvents({
@@ -74,7 +100,15 @@ function App() {
               const isMarkerDuplicate = markersPos.some(
                 pos => pos[0] === newMarkerPos[0] && pos[1] === newMarkerPos[1]
               );
-              if (!isMarkerDuplicate) setMarkersPos([...markersPos, newMarkerPos]);
+              if (!isMarkerDuplicate) {
+                if (markersPos.length > 0) {
+                  const lastPoint = markersPos[markersPos.length - 1]
+                  const snappedRoute = await getSnappedRoute([lastPoint[1], lastPoint[0]], newMarkerPos)
+                  setMarkersPos([...markersPos, ...snappedRoute]);
+                } else {
+                  setMarkersPos([...markersPos, newMarkerPos])
+                }
+              }
               setPlacingPoint(false)
             } else {
               console.error("Could not get snapped coordinates from OSRM.");
@@ -295,7 +329,7 @@ function App() {
           <CreateMarker />
           {markersPos.map((marker, idx) => {
             if (idx === 0 || idx === markersPos.length - 1) return <Marker key={[...marker]} position={[...marker]} />
-            return <Marker key={[...marker]} position={[...marker]} icon={LoadingIcon} />
+            return <Marker key={[...marker]} position={[...marker]} icon={marker[2] ? InvisibleIcon : LoadingIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
