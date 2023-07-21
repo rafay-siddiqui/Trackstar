@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@mapbox/polyline": "^1.2.0",
+    "leaflet": "^1.9.4"
+  }
+}

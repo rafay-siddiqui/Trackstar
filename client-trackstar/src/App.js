@@ -264,6 +264,15 @@ function App() {
     }
   }
 
+  function DistanceDisplay() {
+    return (
+      <div>
+        <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
+        <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+      </div>
+    )
+  }
+
   return (
     <div className='App'>
       <nav className="navbar">
@@ -304,10 +313,7 @@ function App() {
 
           <PointSnappingToggle />
 
-          <div>
-            <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
-            <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
-          </div>
+          <DistanceDisplay />
 
           <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
             <button style={{ marginLeft: "5px", padding: "0px", cursor: 'pointer', backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
@@ -316,7 +322,7 @@ function App() {
           <div>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
             <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
-              < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>Save Route</button>
+              < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>{Object.keys(allRoutes).includes(routeName) ? "Overwrite Route" : "Save Route"}</button>
           </div>
 
           <div>
@@ -327,7 +333,7 @@ function App() {
               })}
             </select>
             <button onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
-               { opacity: 0.5, cursor: 'not-allowed' } : {}}>Load Route</button>
+              { opacity: 0.5, cursor: 'not-allowed' } : {}}>Load Route</button>
           </div>
 
         </div>
