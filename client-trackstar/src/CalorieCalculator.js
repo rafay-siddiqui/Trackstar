@@ -13,9 +13,10 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
   const saveWorkout = () => {
     if ((hours || minutes) && weight) {
       const time = Date.now();
-      const newWorkoutHistory = {...workoutHistory}
-      newWorkoutHistory[time] = {name: routeName, hours, minutes, distance, caloriesBurned, weight, }
-      setWorkoutHistory({newWorkoutHistory})
+      const newWorkoutHistory = { ...workoutHistory }
+      newWorkoutHistory[time] = { name: routeName, hours, minutes, distance, unit, caloriesBurned, weight, weightUnit, activity }
+      setWorkoutHistory(newWorkoutHistory)
+      console.log(workoutHistory)
     }
   }
 
@@ -133,6 +134,27 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
 
       <br />
       <button onClick={saveWorkout}>Save workout</button>
+
+      <br />
+      {workoutHistory && <ul style={{ textAlign: 'left' }}>
+        {Object.keys(workoutHistory).map(workout => {
+          return (
+            <li>
+              <span>
+                {workoutHistory[workout].name ? `Route: ${workoutHistory[workout].name}` : ''},
+                {` ${workoutHistory[workout].distance.toFixed(2)} ${workoutHistory[workout].unit}`}
+                {` in ${workoutHistory[workout].hours} ${parseInt(workoutHistory[workout].hours) !== 1 ? 'hours' : 'hour'}
+                ${workoutHistory[workout].minutes ? ` and ${workoutHistory[workout].minutes} 
+                ${parseInt(workoutHistory[workout].minutes) !== 1 ? 'minutes' : 'minute'}` : ''}`}
+                {` by ${workoutHistory[workout].activity}`}
+              </span>
+              <br />
+              <span>
+                {`Burned ${workoutHistory[workout].caloriesBurned.toFixed(0)} calories at ${workoutHistory[workout].weight} ${workoutHistory[workout].weightUnit}`}
+              </span>
+            </li>)
+        })}
+      </ul>}
     </div>
   )
 }
