@@ -23,6 +23,16 @@ let DefaultIcon = L.icon({
   popupAnchor: [0, -41]
 });
 
+let PathIcon = L.icon({
+  iconUrl: icon,
+  shadowUrl: iconShadow,
+  iconSize: [17, 27],
+  shadowSize: [31, 31],
+  iconAnchor: [8, 27],
+  shadowAnchor: [14, 41],
+  popupAnchor: [0, -41]
+});
+
 let LoadingIcon = L.icon({
   iconUrl: loadingIconUrl,
   iconSize: [50, 50],
@@ -378,7 +388,7 @@ function App() {
           <CreateMarker />
           {markersPos.map((marker, idx) => {
             if (idx === 0 || idx === markersPos.length - 1) return <Marker key={idx} position={[...marker]} />
-            return <Marker key={idx} position={[...marker]} icon={marker.length === 3 ? InvisibleIcon : LoadingIcon} />
+            return <Marker key={idx} position={[...marker]} icon={marker.length === 3 ? InvisibleIcon : PathIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
