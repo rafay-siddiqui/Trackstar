@@ -26,10 +26,10 @@ let DefaultIcon = L.icon({
 let PathIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
-  iconSize: [17, 27],
-  shadowSize: [31, 31],
-  iconAnchor: [8, 27],
-  shadowAnchor: [14, 41],
+  iconSize: [11, 18],
+  shadowSize: [14, 14],
+  iconAnchor: [5, 18],
+  shadowAnchor: [5, 18],
   popupAnchor: [0, -41]
 });
 
