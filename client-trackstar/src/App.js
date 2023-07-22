@@ -25,10 +25,10 @@ let DefaultIcon = L.icon({
 
 let LoadingIcon = L.icon({
   iconUrl: loadingIconUrl,
-  iconSize: [25, 41],
-  shadowSize: [41, 41],
-  iconAnchor: [12, 41],
-  shadowAnchor: [14, 41],
+  iconSize: [50, 50],
+  shadowSize: [50, 50],
+  iconAnchor: [25, 25],
+  shadowAnchor: [25, 25],
   popupAnchor: [0, -41]
 })
 
