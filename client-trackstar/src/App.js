@@ -207,7 +207,7 @@ function App() {
     let newMarkersPos = [...markersPos];
     if (newMarkersPos.length > 0) {
       newMarkersPos.pop();
-      while (newMarkersPos.length > 0 && newMarkersPos[newMarkersPos.length - 1].length === 3) { newMarkersPos.pop() }
+      while (newMarkersPos.length > 0 && newMarkersPos[newMarkersPos.length - 1][2] === true) { newMarkersPos.pop() }
     }
     setMarkersPos(newMarkersPos);
   }
@@ -388,7 +388,7 @@ function App() {
           <CreateMarker />
           {markersPos.map((marker, idx) => {
             if (idx === 0 || idx === markersPos.length - 1) return <Marker key={idx} position={[...marker]} />
-            return <Marker key={idx} position={[...marker]} icon={marker.length === 3 ? InvisibleIcon : PathIcon} />
+            return <Marker key={idx} position={[...marker]} icon={marker[2] === true ? InvisibleIcon : PathIcon} />
           })}
           {loadingPos.length > 0 && <Marker position={[...loadingPos]} icon={LoadingIcon} />}
           <Polyline positions={markersPos} color='red' />
