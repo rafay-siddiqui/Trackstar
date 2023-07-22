@@ -50,7 +50,6 @@ function CalorieCalculator({ distance, unit, activity }) {
     const getIntensity = () => {
       let calcWeight = weight;
       if (weightUnit === 'lbs') { calcWeight *= 0.453592 }
-      console.log('intensity ' + intensity)
       return (intensity * calcWeight * (parseInt(hours) + parseFloat(minutes / 60)))
     }
     setCaloriesBurned(getIntensity())
