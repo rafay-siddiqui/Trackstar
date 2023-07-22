@@ -60,7 +60,7 @@ async function createTables() {
         id SERIAL PRIMARY KEY,
         user_id INTEGER REFERENCES Users(id),
         route_id INTEGER REFERENCES Routes(id),
-        duration REAL,
+        duration INTEGER[],
         distance REAL,
         weight REAL,
         calories_burned REAL
