@@ -10,16 +10,61 @@ const config = {
 };
 const databaseName = process.env.DB_DATABASE;
 
-pgtools.createdb(config, databaseName, (err, res) => {
-  if (err) {
-    console.error(err);
-    process.exit(-1);
-  } else (
-    console.log("Created database")
-  )
-})
+async function createDB() {
+  try {
+    await pgtools.createdb(config, databaseName);
+    console.log("Database created");
+  } catch (err) {
+    console.error("Error creating database: ", err);
+  }
+}
+
 
 const pool = new Pool({
   ...config,
   database: databaseName,
 });
+
+async function createTables() {
+  try {
+    await pool.query(`
+          CREATE TABLE IF NOT EXISTS Users (
+              id SERIAL PRIMARY KEY,
+              name VARCHAR(100) NOT NULL,
+              password VARCHAR(100) NOT NULL,
+              weight REAL,
+              picture BYTEA
+          );
+      `);
+
+    await pool.query(`
+          CREATE TABLE IF NOT EXISTS Routes (
+              id SERIAL PRIMARY KEY,
+              user_id INTEGER REFERENCES Users(id),
+              coordinates REAL[],
+              distance REAL
+          );
+      `);
+
+    await pool.query(`
+          CREATE TABLE IF NOT EXISTS Workouts (
+              id SERIAL PRIMARY KEY,
+              user_id INTEGER REFERENCES Users(id),
+              route_id INTEGER REFERENCES Routes(id),
+              duration REAL,
+              distance REAL,
+              weight REAL,
+              calories_burned REAL
+          );
+      `);
+
+    console.log("Tables created successfully");
+  } catch (error) {
+    console.error("Error creating tables: ", error);
+  }
+}
+
+module.exports = {
+  createDB,
+  createTables,
+}
