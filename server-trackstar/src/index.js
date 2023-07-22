@@ -11,10 +11,18 @@ app.use(function(req, res, next) {
   next();
 })
 
-user_model.createDB();
-user_model.createTables();
-user_model.seedDatabase();
+async function startServer() {
+  try {
+    await user_model.createDB();
+    await user_model.createTables();
+    await user_model.seedDatabase();
 
-app.listen(PORT, () => {
-  console.log(`TRACKSTAR database server running on ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`TRACKSTAR database server running on ${PORT}`);
+    });
+  } catch (err) {
+    console.log('Error while starting up server:', err);
+  }
+}
+
+startServer();

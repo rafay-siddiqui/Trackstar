@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg');
 const pgtools = require('pgtools');
 require('dotenv').config();
 
@@ -11,9 +11,18 @@ const config = {
 const databaseName = process.env.DB_DATABASE;
 
 async function createDB() {
+  const client = new Client({...config, database: databaseName});
+
   try {
-    await pgtools.createdb(config, databaseName);
-    console.log("Database created");
+    await client.connect();
+
+    const dbExists = await client.query(`SELECT datname FROM pg_catalog.pg_database WHERE datname = '${databaseName}'`);
+    if (dbExists.rowCount === 0) {
+      await pgtools.createdb(config, databaseName);
+      console.log("Database created");
+    }
+
+    await client.end();
   } catch (err) {
     console.error("Error creating database: ", err);
   }
@@ -39,12 +48,18 @@ async function createTables() {
     `);
 
     await pool.query(`
-    CREATE TYPE IF NOT EXISTS coordinate AS (
-      lat REAL,
-      lng REAL,
-      majorPoint BOOLEAN DEFAULT false
-    );
-  `);
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 0 FROM pg_type WHERE typname = 'coordinate') THEN
+          CREATE TYPE coordinate AS (
+            lat REAL,
+            lng REAL,
+            majorPoint BOOLEAN
+          );
+        END IF;
+      END
+      $$;
+    `);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Routes (
@@ -72,8 +87,6 @@ async function createTables() {
     console.error("Error creating tables: ", error);
   }
 }
-
-const pool = require('../user_model');
 
 const seedDatabase = async () => {
   try {
