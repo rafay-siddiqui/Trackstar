@@ -62,10 +62,6 @@ function App() {
   const [selectedActivity, setSelectedActivity] = useState('walking')
   const [menuMode, setMenuMode] = useState('route')
 
-  useEffect(() => {
-    console.log("the path distance from App.js is " + pathDistance)
-  }, [pathDistance])
-
   const getActivityType = () => {
     if (selectedActivity === 'walking' || selectedActivity === 'running') {
       return 'foot'
@@ -394,7 +390,7 @@ function App() {
           <button onClick={() => setMenuMode('calories')}>Track Calories</button>
         </div>
 
-        {menuMode === 'calories' && <CalorieCalculator mode={menuMode} distance={pathDistance} unit={unitType}/>}
+        {menuMode === 'calories' && <CalorieCalculator activity={selectedActivity} distance={pathDistance} unit={unitType}/>}
 
         {menuMode === 'route' && <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}

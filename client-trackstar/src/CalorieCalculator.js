@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 
-function CalorieCalculator({ distance, unit, mode }) {
-  const [duration, setDuration] = useState({ hours: 0, minutes: 0 })
-  const [pace, setPace] = useState(distance / (duration.hours + duration.minutes / 60))
+function CalorieCalculator({ distance, unit, activity }) {
+  const [hours, setHours] = useState(0)
+  const [minutes, setMinutes] = useState(0)
+  const [pace, setPace] = useState(distance / (hours + minutes / 60))
   const [intensity, setIntensity] = useState(0)
   const [weight, setWeight] = useState(0)
   const [weightUnit, setWeightUnit] = useState('kg')
   const [caloriesBurned, setCaloriesBurned] = useState(0)
 
   useEffect(() => {
-    setPace(distance / (duration.hours + duration.minutes / 60))
-  }, [duration, distance])
+    setPace(distance / (parseInt(hours) + parseFloat(minutes / 60)))
+  }, [hours, minutes, distance])
 
   useEffect(() => {
     function footMET(pace) {
@@ -38,16 +39,22 @@ function CalorieCalculator({ distance, unit, mode }) {
       return 16.0;
     }
 
-    if (mode === 'walking' || mode === 'running') {
+    if (activity === 'walking' || activity === 'running') {
       setIntensity(footMET(pace))
-    } else if (mode === 'biking') {
+    } else if (activity === 'biking') {
       setIntensity(bikeMET(pace))
     }
-  }, [pace, mode, unit])
+  }, [pace, activity, unit])
 
   useEffect(() => {
-
-  }, [intensity])
+    const getIntensity = () => {
+      let calcWeight = weight;
+      if (weightUnit === 'lbs') { calcWeight *= 0.453592 }
+      console.log('intensity ' + intensity)
+      return (intensity * calcWeight * (parseInt(hours) + parseFloat(minutes / 60)))
+    }
+    setCaloriesBurned(getIntensity())
+  }, [intensity, weight, hours, minutes , weightUnit])
 
   const toggleWeightUnit = () => {
     if (weightUnit === 'kg') {
@@ -62,10 +69,10 @@ function CalorieCalculator({ distance, unit, mode }) {
   return (
     <div>
       <label>
-        <input type='number' min={0} max={24} value={duration.hours} onChange={(e) => {
+        <input type='number' min={0} max={24} value={hours} onChange={(e) => {
           if (e.target.value <= 24 && e.target.value >= 0) {
 
-            setDuration({ ...duration, hours: e.target.value })
+            setHours(e.target.value)
           }
           // else { alert("Hours must be between 0 and 24") }
         }}
@@ -73,9 +80,9 @@ function CalorieCalculator({ distance, unit, mode }) {
         Hours
       </label>
       <label>
-        <input type='number' min={0} max={59} value={duration.minutes} onChange={(e) => {
+        <input type='number' min={0} max={59} value={minutes} onChange={(e) => {
           if (e.target.value < 60 && e.target.value >= 0) {
-            setDuration({ ...duration, minutes: e.target.value })
+            setMinutes(e.target.value)
           }
           // else (alert('Minutes must be between 0 and 59'))
         }}
@@ -84,7 +91,7 @@ function CalorieCalculator({ distance, unit, mode }) {
       </label>
       <br />
       <label>
-        <input style={{width: '50px'}} type='number' min={20} max={500} value={weight<=500 ? weight : 500} onChange={(e) => {
+        <input style={{ width: '50px' }} type='number' min={20} max={500} value={weight <= 500 ? weight : 500} onChange={(e) => {
           if (e.target.value >= 0 && e.target.value <= 500) {
             setWeight(e.target.value)
           }
@@ -93,7 +100,7 @@ function CalorieCalculator({ distance, unit, mode }) {
         <button onClick={toggleWeightUnit}>{weightUnit}</button>
       </label>
       <br />
-      <span>{`${pace.toFixed(2)} ${unit}/hr`}</span>
+      <span>{`Burned ${caloriesBurned.toFixed(0)} calories`}</span>
     </div>
   )
 }
