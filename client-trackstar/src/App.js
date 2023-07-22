@@ -403,7 +403,7 @@ function App() {
           <button onClick={() => setMenuMode('calories')}>Track Calories</button>
         </div>
 
-        {menuMode === 'calories' && <CalorieCalculator activity={selectedActivity} distance={pathDistance} unit={unitType} />}
+        {menuMode === 'calories' && <CalorieCalculator routeName={routeName} activity={selectedActivity} distance={pathDistance} unit={unitType} />}
 
         {menuMode === 'route' && <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}

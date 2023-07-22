@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function CalorieCalculator({ distance, unit, activity }) {
+function CalorieCalculator({ distance, unit, activity, routeName }) {
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [pace, setPace] = useState(distance / (hours + minutes / 60))
@@ -8,6 +8,36 @@ function CalorieCalculator({ distance, unit, activity }) {
   const [weight, setWeight] = useState(0)
   const [weightUnit, setWeightUnit] = useState('kg')
   const [caloriesBurned, setCaloriesBurned] = useState(0)
+  const [workoutHistory, setWorkoutHistory] = useState({})
+
+  const saveWorkout = () => {
+    if ((hours || minutes) && weight) {
+      const time = Date.now();
+      const newWorkoutHistory = {...workoutHistory}
+      newWorkoutHistory[time] = {name: routeName, hours, minutes, distance, caloriesBurned, weight, }
+      setWorkoutHistory({newWorkoutHistory})
+    }
+  }
+
+  // const saveRoute = () => {
+  //   if (routeName.length < 1 || markersPos.length < 2) {
+  //     routeNameInputRef.current.focus()
+  //   } else if (routeName.length > 0) {
+  //     let newAllRoutes = { ...allRoutes }
+  //     newAllRoutes[routeName] = {
+  //       markersPos: markersPos,
+  //       pathDistance: pathDistance,
+  //       unitType: unitType,
+  //       mapCenter: [(markersPos[0][0] + markersPos[markersPos.length - 1][0]) / 2,
+  //       (markersPos[0][1] + markersPos[markersPos.length - 1][1]) / 2]
+  //     }
+  //     setAllRoutes(newAllRoutes)
+  //     setRouteName('')
+  //     resetRoute()
+  //     setCreatingRoute(false)
+  //     setPointSnapping(true)
+  //   }
+  // }
 
   useEffect(() => {
     setPace(distance / (parseInt(hours) + parseFloat(minutes / 60)))
@@ -53,7 +83,7 @@ function CalorieCalculator({ distance, unit, activity }) {
       return (intensity * calcWeight * (parseInt(hours) + parseFloat(minutes / 60)))
     }
     setCaloriesBurned(getIntensity())
-  }, [intensity, weight, hours, minutes , weightUnit])
+  }, [intensity, weight, hours, minutes, weightUnit])
 
   const toggleWeightUnit = () => {
     if (weightUnit === 'kg') {
@@ -100,6 +130,9 @@ function CalorieCalculator({ distance, unit, activity }) {
       </label>
       <br />
       <span>{`Burned ${caloriesBurned.toFixed(0)} calories`}</span>
+
+      <br />
+      <button onClick={saveWorkout}>Save workout</button>
     </div>
   )
 }
