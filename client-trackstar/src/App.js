@@ -80,8 +80,10 @@ function App() {
         }
         return [latitude, longitude, true]
       })
-    } else { console.error("Could not snap route to road") }
-    setLoadingPos([])
+    } else {
+      console.error("Could not snap route to road")
+      setLoadingPos([])
+    }
   }
 
   function CreateMarker() {
@@ -116,6 +118,7 @@ function App() {
                   const snappedRoute = await getSnappedRoute([lastPoint[1], lastPoint[0]], newMarkerPos)
                   setMarkersPos([...markersPos, ...snappedRoute]);
                 } else {
+                  setLoadingPos([])
                   setMarkersPos([...markersPos, newMarkerPos])
                 }
               }
@@ -390,7 +393,7 @@ function App() {
           <button onClick={() => setMenuMode('calories')}>Track Calories</button>
         </div>
 
-        {menuMode === 'calories' && <CalorieCalculator activity={selectedActivity} distance={pathDistance} unit={unitType}/>}
+        {menuMode === 'calories' && <CalorieCalculator activity={selectedActivity} distance={pathDistance} unit={unitType} />}
 
         {menuMode === 'route' && <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
@@ -404,7 +407,7 @@ function App() {
             <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
           </div>
 
-          <DistanceDisplay/>
+          <DistanceDisplay />
 
           <ActivityToggle />
 
