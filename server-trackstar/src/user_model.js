@@ -88,7 +88,6 @@ async function createTables() {
       );
     `);
 
-    console.log("Tables created successfully");
   } catch (error) {
     console.error("Error creating tables: ", error);
   }
