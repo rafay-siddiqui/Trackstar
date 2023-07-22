@@ -28,35 +28,43 @@ const pool = new Pool({
 async function createTables() {
   try {
     await pool.query(`
-          CREATE TABLE IF NOT EXISTS Users (
-              id SERIAL PRIMARY KEY,
-              name VARCHAR(100) NOT NULL,
-              password VARCHAR(100) NOT NULL,
-              weight REAL,
-              picture BYTEA
-          );
-      `);
+      CREATE TYPE IF NOT EXISTS coordinate AS (
+        lat REAL,
+        lng REAL,
+        majorPoint BOOLEAN DEFAULT false
+      );
+    `);
 
     await pool.query(`
-          CREATE TABLE IF NOT EXISTS Routes (
-              id SERIAL PRIMARY KEY,
-              user_id INTEGER REFERENCES Users(id),
-              coordinates REAL[],
-              distance REAL
-          );
-      `);
+      CREATE TABLE IF NOT EXISTS Users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        password VARCHAR(100) NOT NULL,
+        weight REAL,
+        picture BYTEA
+      );
+    `);
 
     await pool.query(`
-          CREATE TABLE IF NOT EXISTS Workouts (
-              id SERIAL PRIMARY KEY,
-              user_id INTEGER REFERENCES Users(id),
-              route_id INTEGER REFERENCES Routes(id),
-              duration REAL,
-              distance REAL,
-              weight REAL,
-              calories_burned REAL
-          );
-      `);
+      CREATE TABLE IF NOT EXISTS Routes (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES Users(id),
+        coordinates coordinate[],
+        distance REAL
+      );
+    `);
+
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS Workouts (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES Users(id),
+        route_id INTEGER REFERENCES Routes(id),
+        duration REAL,
+        distance REAL,
+        weight REAL,
+        calories_burned REAL
+      );
+    `);
 
     console.log("Tables created successfully");
   } catch (error) {
