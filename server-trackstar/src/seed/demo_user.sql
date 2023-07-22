@@ -13,7 +13,8 @@ VALUES ((SELECT id FROM Users WHERE name='Terry Fox'),
 -- Insert a new workout
 -- We'll fetch the ID of the route we just created in a similar way, and assume the workout covered the whole distance.
 INSERT INTO Workouts (user_id, route_id, duration, distance, weight, calories_burned)
-VALUES ((SELECT id FROM Users WHERE name='Terry Fox'), (SELECT min(id) FROM Routes 
-WHERE user_id=(SELECT id FROM Users WHERE name='Terry Fox')), [6,0], (SELECT distance 
-FROM Routes WHERE id=(SELECT min(id) FROM Routes WHERE user_id=(SELECT id FROM Users 
-WHERE name='Terry Fox'))), NULL, NULL);
+VALUES ((SELECT id FROM Users WHERE name='Terry Fox'),
+  (SELECT min(id) FROM Routes WHERE user_id=(SELECT id FROM Users WHERE name='Terry Fox')),
+  ARRAY[6,0], 
+  (SELECT distance FROM Routes WHERE id=(SELECT min(id) FROM Routes WHERE user_id=(SELECT id FROM Users 
+  WHERE name='Terry Fox'))), NULL, NULL);

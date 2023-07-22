@@ -10,32 +10,38 @@ const config = {
 };
 const databaseName = process.env.DB_DATABASE;
 
+let pool;
+
+function getPool() {
+  if (!pool) {
+    pool = new Pool({
+      ...config,
+      database: databaseName,
+    });
+  }
+  return pool;
+}
+
 async function createDB() {
   const client = new Client({...config, database: databaseName});
 
   try {
     await client.connect();
-
-    const dbExists = await client.query(`SELECT datname FROM pg_catalog.pg_database WHERE datname = '${databaseName}'`);
-    if (dbExists.rowCount === 0) {
-      await pgtools.createdb(config, databaseName);
-      console.log("Database created");
-    }
-
     await client.end();
   } catch (err) {
-    console.error("Error creating database: ", err);
+    if (err.code === '3D000') {  // '3D000' corresponds to "database does not exist"
+      console.log('Database does not exist, creating...');
+      await pgtools.createdb({...config, database: 'postgres'}, databaseName);
+      console.log("Database created");
+    } else {
+      console.error("Error creating database: ", err);
+    }
   }
 }
 
-
-const pool = new Pool({
-  ...config,
-  database: databaseName,
-});
-
 async function createTables() {
   try {
+    const pool = getPool();
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Users (
@@ -90,12 +96,14 @@ async function createTables() {
 
 const seedDatabase = async () => {
   try {
+    const pool = getPool();
+
     const user = await pool.query("SELECT * FROM Users WHERE name = 'Terry Fox'");
     if (user.rowCount === 0) {
       await pool.query("INSERT INTO Users (name, password) VALUES ('Terry Fox', 'trackster')");
 
       // Replace with the actual coordinates and distance
-      const coordinates = [[49.8951, -97.1384, true], [49.2827, -123.1207, true]];
+      const coordinates = ["(49.8951, -97.1384, true)", "(49.2827, -123.1207, true)"];
       const distance = 1234;
       await pool.query("INSERT INTO Routes (user_id, coordinates, distance) VALUES ((SELECT id FROM Users WHERE name = 'Terry Fox'), $1, $2)", [coordinates, distance]);
 
