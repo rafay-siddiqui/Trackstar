@@ -11,6 +11,8 @@ import loadingIconUrl from './images/loading-marker-200px.gif'
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
 
+import CalorieCalculator from './CalorieCalculator';
+
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -58,6 +60,11 @@ function App() {
   const [selectedRoute, setSelectedRoute] = useState("")
   const loadRouteRef = useRef(null);
   const [selectedActivity, setSelectedActivity] = useState('walking')
+  const [menuMode, setMenuMode] = useState('route')
+
+  useEffect(() => {
+    console.log("the path distance from App.js is " + pathDistance)
+  }, [pathDistance])
 
   const getActivityType = () => {
     if (selectedActivity === 'walking' || selectedActivity === 'running') {
@@ -382,8 +389,14 @@ function App() {
       </div>
 
       <div className="route-options">
+        <div>
+          <button onClick={() => setMenuMode('route')}>Create Route</button>
+          <button onClick={() => setMenuMode('calories')}>Track Calories</button>
+        </div>
 
-        <div className="routemaker-form">
+        {menuMode === 'calories' && <CalorieCalculator mode={menuMode} distance={pathDistance} unit={unitType}/>}
+
+        {menuMode === 'route' && <div className="routemaker-form">
           <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
           <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
@@ -395,7 +408,7 @@ function App() {
             <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
           </div>
 
-          <DistanceDisplay />
+          <DistanceDisplay/>
 
           <ActivityToggle />
 
@@ -418,7 +431,7 @@ function App() {
               { opacity: 0.5, cursor: 'not-allowed' } : {}}>Load Route</button>
           </div>
 
-        </div>
+        </div>}
       </div>
 
       {locationLoading && <img className="loading-location" src={loadingIconUrl} alt="Loading Location..." />}
