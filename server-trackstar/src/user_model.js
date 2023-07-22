@@ -73,7 +73,38 @@ async function createTables() {
   }
 }
 
+const pool = require('../user_model');
+
+const seedDatabase = async () => {
+  try {
+    const user = await pool.query("SELECT * FROM Users WHERE name = 'Terry Fox'");
+    if (user.rowCount === 0) {
+      await pool.query("INSERT INTO Users (name, password) VALUES ('Terry Fox', 'trackster')");
+
+      // Replace with the actual coordinates and distance
+      const coordinates = [[49.8951, -97.1384, true], [49.2827, -123.1207, true]];
+      const distance = 1234;
+      await pool.query("INSERT INTO Routes (user_id, coordinates, distance) VALUES ((SELECT id FROM Users WHERE name = 'Terry Fox'), $1, $2)", [coordinates, distance]);
+
+      // Replace with the actual duration, distance, weight, and calories burned
+      const duration = [360, 600]; // for example
+      const workoutDistance = 1234;
+      const weight = 150;
+      const caloriesBurned = 1000;
+      await pool.query("INSERT INTO Workouts (user_id, route_id, duration, distance, weight, calories_burned) VALUES ((SELECT id FROM Users WHERE name = 'Terry Fox'), (SELECT id FROM Routes WHERE user_id = (SELECT id FROM Users WHERE name = 'Terry Fox')), $1, $2, $3, $4)", [duration, workoutDistance, weight, caloriesBurned]);
+
+      console.log("Database seeded successfully");
+    }
+  } catch (error) {
+    console.error("Error seeding database: ", error);
+  }
+};
+
+module.exports = seedDatabase;
+
+
 module.exports = {
   createDB,
   createTables,
+  seedDatabase,
 }
