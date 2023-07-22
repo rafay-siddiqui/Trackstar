@@ -21,3 +21,6 @@ client-trackstar/.env.production.local
 client-trackstar/npm-debug.log*
 client-trackstar/yarn-debug.log*
 client-trackstar/yarn-error.log*
+
+# database variables
+server/.env
