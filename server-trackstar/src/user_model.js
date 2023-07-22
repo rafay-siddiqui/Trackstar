@@ -27,13 +27,6 @@ const pool = new Pool({
 
 async function createTables() {
   try {
-    await pool.query(`
-      CREATE TYPE IF NOT EXISTS coordinate AS (
-        lat REAL,
-        lng REAL,
-        majorPoint BOOLEAN DEFAULT false
-      );
-    `);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Users (
@@ -44,6 +37,14 @@ async function createTables() {
         picture BYTEA
       );
     `);
+
+    await pool.query(`
+    CREATE TYPE IF NOT EXISTS coordinate AS (
+      lat REAL,
+      lng REAL,
+      majorPoint BOOLEAN DEFAULT false
+    );
+  `);
 
     await pool.query(`
       CREATE TABLE IF NOT EXISTS Routes (
