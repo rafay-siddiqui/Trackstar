@@ -25,4 +25,10 @@ async function startServer() {
   }
 }
 
+//GET demo user profile (name, profile picture)
+//GET demo user routes
+//GET demo user workouts
+//POST new route
+//POST new workout
+
 startServer();

@@ -120,7 +120,6 @@ const seedDatabase = async () => {
   }
 };
 
-module.exports = seedDatabase;
 
 
 module.exports = {
