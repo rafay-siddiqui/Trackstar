@@ -366,6 +366,14 @@ function App() {
     )
   }
 
+  function LoginButton() {
+    return (
+      <button>
+        Login
+      </button>
+    )
+  }
+
   return (
     <div className='App'>
       <nav className="navbar">
@@ -374,6 +382,7 @@ function App() {
           <li className="navitem">Home</li>
           <li className="navitem">Tracks</li>
           <li className="navitem">History</li>
+          <LoginButton />
         </ul>
       </nav>
 
