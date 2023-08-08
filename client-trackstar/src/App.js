@@ -382,7 +382,7 @@ function App() {
     <div className='App'>
       <nav className="navbar">
         <h1>TRACKSTAR</h1>
-        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
+        <input id='map-location' type='text' placeholder='Set Map Location' value={searchLocation}
           onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
         <ul>
           <li className="navitem">Home</li>
