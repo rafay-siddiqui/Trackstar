@@ -364,8 +364,8 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <h4>Distance: {pathDistance.toFixed(3)}
-        <button onClick={toggleUnitType}>{unitType}</button>
+      <h4 style={{display: 'flex', alignSelf: 'center'}}>Distance: {pathDistance.toFixed(3)}
+        <button style={{padding: '5px', marginLeft: '5px'}} onClick={toggleUnitType}>{unitType}</button>
       </h4>
     )
   }
@@ -436,14 +436,15 @@ function App() {
 
           <DistanceDisplay />
 
-          <div>
+          <div className='save-route'>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
             <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
               < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>{Object.keys(allRoutes).includes(routeName) ? "Overwrite Route" : "Save Route"}</button>
           </div>
 
-          <div>
-            <select ref={loadRouteRef} value={selectedRoute} onChange={(e) => { setSelectedRoute(e.target.value) }}>
+          <div className='load-route'>
+            <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
+            onChange={(e) => { setSelectedRoute(e.target.value) }}>
               <option value='' disabled>Choose route to load</option>
               {Object.keys(allRoutes).map((route, idx) => {
                 return <option key={idx}>{route}</option>

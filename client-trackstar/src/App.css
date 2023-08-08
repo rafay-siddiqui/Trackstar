@@ -149,3 +149,19 @@ button {
   cursor: pointer;
   border-radius: 5px;
 }
+
+.save-route {
+  display: flex;
+}
+
+.save-route input {
+  flex-grow: 2;
+}
+
+.load-route {
+  display: flex;
+}
+
+.load-route select {
+  flex-grow: 2;
+}
