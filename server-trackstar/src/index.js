@@ -26,6 +26,16 @@ async function startServer() {
 }
 
 //GET demo user profile (name, profile picture)
+app.get('/fetch-demo-user', async (req, res) => {
+  try {
+    const user = await user_model.fetchDemoUser();
+    res.json({ user });
+  } catch (err) {
+    console.err(err)
+    res.status(500).json({ error: 'Unable to fetch demo user' })
+  }
+})
+
 //GET demo user routes
 //GET demo user workouts
 //POST new route

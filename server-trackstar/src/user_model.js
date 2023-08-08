@@ -120,7 +120,7 @@ const seedDatabase = async () => {
   }
 };
 
-const fetchDemoUsername = async () => {
+const fetchDemoUser = async () => {
   try {
     const result = await pool.query('SELECT name, picture FROM Users ORDER BY id ASC LIMIT 1');
     return result.rows[0].username;
@@ -135,5 +135,5 @@ module.exports = {
   createDB,
   createTables,
   seedDatabase,
-  fetchDemoUsername,
+  fetchDemoUser,
 }
