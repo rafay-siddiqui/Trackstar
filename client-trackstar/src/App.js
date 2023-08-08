@@ -294,7 +294,7 @@ function App() {
 
   function PointSnappingToggle() {
     return (
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
         <label>
           <input
             disabled={!creatingRoute}
@@ -329,7 +329,7 @@ function App() {
             checked={selectedActivity === 'walking'}
             onChange={() => setSelectedActivity('walking')}
           />
-          <img src={walkingIcon} alt='Walking'/>
+          <img src={walkingIcon} alt='Walking' />
         </label>
         <label className={'activity-select'}>
           <input
@@ -338,7 +338,7 @@ function App() {
             checked={selectedActivity === 'running'}
             onChange={() => setSelectedActivity('running')}
           />
-          <img src={runningIcon} alt='Running'/>
+          <img src={runningIcon} alt='Running' />
         </label>
         <label className={'activity-select'}>
           <input
@@ -347,7 +347,7 @@ function App() {
             checked={selectedActivity === 'biking'}
             onChange={() => setSelectedActivity('biking')}
           />
-          <img src={bikingIcon} alt='Biking'/>
+          <img src={bikingIcon} alt='Biking' />
         </label>
       </div>
     );
@@ -364,8 +364,8 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <h4 style={{ padding: '0px', margin: '0px', marginTop: '10px' }}>Distance: {pathDistance.toFixed(3)}
-        <button style={{ marginLeft: "5px", padding: "0px", cursor: 'pointer', backgroundColor: "rgba(0,0,0,0)" }} onClick={toggleUnitType}>{unitType}</button>
+      <h4>Distance: {pathDistance.toFixed(3)}
+        <button onClick={toggleUnitType}>{unitType}</button>
       </h4>
     )
   }
@@ -382,6 +382,8 @@ function App() {
     <div className='App'>
       <nav className="navbar">
         <h1>TRACKSTAR</h1>
+        <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
+          onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
         <ul>
           <li className="navitem">Home</li>
           <li className="navitem">Tracks</li>
@@ -411,30 +413,28 @@ function App() {
       </div>
 
       <div className="route-options">
-        <div>
-          <button onClick={() => setMenuMode('route')}>Create Route</button>
-          <button onClick={() => setMenuMode('calories')}>Track Calories</button>
+        <div className='route-options-select'>
+          <button className={menuMode === 'route' && 'selected'} onClick={() => setMenuMode('route')}>Route Creation</button>
+          <button className={menuMode === 'calories' && 'selected'} onClick={() => setMenuMode('calories')}>Workout Tracking</button>
         </div>
 
         {menuMode === 'calories' && <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />}
 
         {menuMode === 'route' && <div className="routemaker-form">
-          <input id='map-location' type='text' placeholder='Set Location' value={searchLocation}
-            onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
-          <button onClick={toggleCreatingRoute}>{creatingRoute ? "Creating Route" : "Create Route"}</button>
+          <div className={'marker-controls'}>
+            <button className={'enable-markers'} onClick={toggleCreatingRoute}>{creatingRoute ? "Placing Markers..." : "Place Markers"}</button>
+            <div className={'edit-markers'}>
+              <button onClick={undoMarker} disabled={!(markersPos.length > 0)}>Undo</button>
+              <button onClick={resetRoute} disabled={!(markersPos.length > 0)}>Reset</button>
+            </div>
+          </div>
 
-          <PointSnappingToggle />
-
-          <div>
-            <button onClick={undoMarker} disabled={!(creatingRoute && markersPos.length > 0)}>Undo Last Point</button>
-            <button onClick={resetRoute} disabled={!(creatingRoute && markersPos.length > 0)}>Reset Route</button>
+          <div style={{ display: 'flex' }}>
+            <PointSnappingToggle />
+            <ActivityToggle />
           </div>
 
           <DistanceDisplay />
-
-          <ActivityToggle />
-
-
 
           <div>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />

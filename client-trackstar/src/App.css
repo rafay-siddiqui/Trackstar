@@ -1,6 +1,7 @@
 .navbar {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-left: 30px;
   padding-right: 30px;
   background-color: rgba(96, 201, 243, 0.8);
@@ -22,7 +23,7 @@
 .navbar h1 {
   font-size: xx-large;
   margin: 0px;
-  margin-top: 15px;
+  color: white;
 }
 
 .navitem {
@@ -32,6 +33,23 @@
 .navitem:hover {
   background-color: whitesmoke;
   color: skyblue;
+}
+
+#map-location {
+  height: 20px;
+  font-size: large;
+  text-align: center;
+  margin: 5px;
+  margin-left: 100px;
+  width: 550px;
+  border-radius: 25px;
+  background: rgba(255,255,255,0.80);
+  box-shadow: 0 0 25px whitesmoke;
+  outline: none;
+}
+
+#map-location:focus {
+  box-shadow: 0 0 10px rgba(50,200,50,0.8);
 }
 
 .routemaker-map {
@@ -49,6 +67,28 @@
   z-index: 1;
   background-color: rgba(50,200,50,0.8);
   text-align: center;
+  border-radius: 10px;
+}
+
+.route-options-select {
+  display: flex;
+  background-color: rgba(0,0,0,0.3);
+  padding: 5px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.route-options-select > button {
+  flex-grow: 1;
+  padding: 10px;
+  background-color: #ccc;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.route-options-select > button.selected {
+  background-color: skyblue;
 }
 
 .routemaker-form {
@@ -57,11 +97,18 @@
   justify-content: space-evenly;
 }
 
-#map-location {
-  height: 30px;
-  font-size: large;
-  text-align: center;
-  margin: 5px;
+.marker-controls {
+  display: flex;
+}
+
+.enable-markers {
+  flex-grow: 3;
+}
+
+.edit-markers {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .loading-location {
@@ -73,5 +120,32 @@
 
 .activity-select {
   display: flex;
-  margin: 2px;
+  margin: 0px;
+}
+
+h4 {
+  padding: 0px;
+  margin: 0px;
+  margin-top: 10px;
+  font-size: xx-large;
+}
+
+input[type='text'], select {
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 5px;
+}
+
+button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
 }
