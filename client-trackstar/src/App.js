@@ -8,6 +8,10 @@ import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import loadingIconUrl from './images/loading-marker-200px.gif'
 
+import walkingIcon from './images/person-walking.svg'
+import runningIcon from './images/person-running.svg'
+import bikingIcon from './images/person-biking.svg'
+
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
 
@@ -318,32 +322,32 @@ function App() {
   function ActivityToggle() {
     return (
       <div style={{ display: 'flex' }}>
-        <label>
+        <label className={'activity-select'}>
           <input
             type="radio"
             value="walk"
             checked={selectedActivity === 'walking'}
             onChange={() => setSelectedActivity('walking')}
           />
-          Walking
+          <img src={walkingIcon} alt='Walking'/>
         </label>
-        <label>
+        <label className={'activity-select'}>
           <input
             type="radio"
             value="run"
             checked={selectedActivity === 'running'}
             onChange={() => setSelectedActivity('running')}
           />
-          Running
+          <img src={runningIcon} alt='Running'/>
         </label>
-        <label>
+        <label className={'activity-select'}>
           <input
             type="radio"
             value="bike"
             checked={selectedActivity === 'biking'}
             onChange={() => setSelectedActivity('biking')}
           />
-          Biking
+          <img src={bikingIcon} alt='Biking'/>
         </label>
       </div>
     );

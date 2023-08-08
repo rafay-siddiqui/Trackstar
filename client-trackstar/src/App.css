@@ -70,3 +70,8 @@
   top: 40%;
   left: 45%;
 }
+
+.activity-select {
+  display: flex;
+  margin: 2px;
+}
