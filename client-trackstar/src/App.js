@@ -424,8 +424,8 @@ function App() {
           <div className={'marker-controls'}>
             <button className={'enable-markers'} onClick={toggleCreatingRoute}>{creatingRoute ? "Placing Markers..." : "Place Markers"}</button>
             <div className={'edit-markers'}>
-              <button onClick={undoMarker} disabled={!(markersPos.length > 0)}>Undo</button>
-              <button onClick={resetRoute} disabled={!(markersPos.length > 0)}>Reset</button>
+              <button onClick={undoMarker} disabled={markersPos.length < 1}>Undo</button>
+              <button onClick={resetRoute} disabled={markersPos.length < 1}>Reset</button>
             </div>
           </div>
 

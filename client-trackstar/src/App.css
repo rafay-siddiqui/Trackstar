@@ -83,8 +83,15 @@
   padding: 10px;
   background-color: #ccc;
   border: none;
-  cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.route-options-select >button:first-child {
+  border-radius: 15px 0px 0px 15px;
+}
+
+.route-options-select >button:last-child {
+  border-radius: 0px 15px 15px 0px;
 }
 
 .route-options-select > button.selected {
@@ -148,6 +155,11 @@ button {
   margin: 4px 2px;
   cursor: pointer;
   border-radius: 5px;
+}
+
+button:disabled {
+  cursor: auto;
+  opacity: 0.5;
 }
 
 .save-route {

@@ -23,7 +23,7 @@ function getPool() {
 }
 
 async function createDB() {
-  const client = new Client({...config, database: databaseName});
+  const client = new Client({ ...config, database: databaseName });
 
   try {
     await client.connect();
@@ -31,7 +31,7 @@ async function createDB() {
   } catch (err) {
     if (err.code === '3D000') {  // '3D000' corresponds to "database does not exist"
       console.log('Database does not exist, creating...');
-      await pgtools.createdb({...config, database: 'postgres'}, databaseName);
+      await pgtools.createdb({ ...config, database: 'postgres' }, databaseName);
       console.log("Database created");
     } else {
       console.error("Error creating database: ", err);
@@ -49,7 +49,7 @@ async function createTables() {
         name VARCHAR(100) NOT NULL,
         password VARCHAR(100) NOT NULL,
         weight REAL,
-        picture BYTEA
+        picture TEXT
       );
     `);
 
@@ -99,7 +99,7 @@ const seedDatabase = async () => {
 
     const user = await pool.query("SELECT * FROM Users WHERE name = 'Terry Fox'");
     if (user.rowCount === 0) {
-      await pool.query("INSERT INTO Users (name, password) VALUES ('Terry Fox', 'trackster')");
+      await pool.query("INSERT INTO Users (name, password, picture) VALUES ('Terry Fox', 'trackster', 'https://cloudfront-us-east-1.images.arcpublishing.com/tgam/K3XHSZZ4VFJINOSOTHTMQ6STZU.jpg')");
 
       // Replace with the actual coordinates and distance
       const coordinates = ["(49.8951, -97.1384, true)", "(49.2827, -123.1207, true)"];
@@ -111,7 +111,10 @@ const seedDatabase = async () => {
       const workoutDistance = 1234;
       const weight = 150;
       const caloriesBurned = 1000;
-      await pool.query("INSERT INTO Workouts (user_id, route_id, duration, distance, weight, calories_burned) VALUES ((SELECT id FROM Users WHERE name = 'Terry Fox'), (SELECT id FROM Routes WHERE user_id = (SELECT id FROM Users WHERE name = 'Terry Fox')), $1, $2, $3, $4)", [duration, workoutDistance, weight, caloriesBurned]);
+      await pool.query(`INSERT INTO Workouts (user_id, route_id, duration, distance, weight, 
+        calories_burned) VALUES ((SELECT id FROM Users WHERE name = 'Terry Fox'), 
+        (SELECT id FROM Routes WHERE user_id = (SELECT id FROM Users WHERE name = 'Terry Fox')),
+         $1, $2, $3, $4)`, [duration, workoutDistance, weight, caloriesBurned]);
 
       console.log("Database seeded successfully");
     }
@@ -123,13 +126,11 @@ const seedDatabase = async () => {
 const fetchDemoUser = async () => {
   try {
     const result = await pool.query('SELECT name, picture FROM Users ORDER BY id ASC LIMIT 1');
-    return result.rows[0].username;
+    return result.rows[0];
   } catch (err) {
     console.error(err);
   }
 }
-
-
 
 module.exports = {
   createDB,

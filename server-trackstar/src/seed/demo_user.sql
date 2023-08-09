@@ -1,5 +1,5 @@
 INSERT INTO Users (name, password, weight, picture) VALUES ('Terry Fox', 'trackstar',
- NULL, NULL);
+ NULL, 'https://cloudfront-us-east-1.images.arcpublishing.com/tgam/K3XHSZZ4VFJINOSOTHTMQ6STZU.jpg');
 
 INSERT INTO Routes (user_id, coordinates, distance)
 VALUES ((SELECT id FROM Users WHERE name='Terry Fox'), 

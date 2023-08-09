@@ -25,13 +25,17 @@ async function startServer() {
   }
 }
 
+app.get('/', (req, res) => {
+  res.send('hello');
+});
+
 //GET demo user profile (name, profile picture)
-app.get('/fetch-demo-user', async (req, res) => {
+app.get('/fetchdemouser', async (req, res) => {
   try {
     const user = await user_model.fetchDemoUser();
     res.json({ user });
   } catch (err) {
-    console.err(err)
+    console.error(err)
     res.status(500).json({ error: 'Unable to fetch demo user' })
   }
 })
