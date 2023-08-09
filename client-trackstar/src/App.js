@@ -75,6 +75,7 @@ function App() {
   const loadRouteRef = useRef(null);
   const [selectedActivity, setSelectedActivity] = useState('walking')
   const [menuMode, setMenuMode] = useState('route')
+  const [mapZoom, setMapZoom] = useState(13);
 
   const getActivityType = () => {
     if (selectedActivity === 'walking' || selectedActivity === 'running') {
@@ -150,6 +151,29 @@ function App() {
     return null
   }
 
+  function ZoomControls() {
+    const handleZoomTo = (zoomLevel) => {
+      setMapZoom(zoomLevel)
+    }
+
+    return (
+      <div>
+        <button className='zoom-button' onClick={() => { handleZoomTo(18) }}>Close</button>
+        <button className='zoom-button' onClick={() => { handleZoomTo(15) }}>Far</button>
+      </div>
+    )
+  }
+
+  function ZoomControlsRef() {
+    const map = useMap()
+    useEffect(() => {
+      if (mapZoom) {
+        map.setZoom(mapZoom)
+        setMapZoom(null)
+      }
+    }, [mapZoom])
+  }
+
   const haversineDistance = (coords1, coords2, isMiles = false) => {
     const toRad = (x) => {
       return x * Math.PI / 180;
@@ -194,6 +218,10 @@ function App() {
       }
     }
   }, [markersPos, unitType])
+
+  useEffect(() => {
+    setCreatingRoute(false);
+  }, [menuMode])
 
   function MoveMap() {
     const map = useMap()
@@ -321,8 +349,8 @@ function App() {
 
   function ActivityToggle() {
     return (
-      <div style={{ display: 'flex' }}>
-        <label className={'activity-select'}>
+      <div className={'activity-select'} >
+        <label>
           <input
             type="radio"
             value="walk"
@@ -331,7 +359,7 @@ function App() {
           />
           <img src={walkingIcon} alt='Walking' />
         </label>
-        <label className={'activity-select'}>
+        <label>
           <input
             type="radio"
             value="run"
@@ -340,7 +368,7 @@ function App() {
           />
           <img src={runningIcon} alt='Running' />
         </label>
-        <label className={'activity-select'}>
+        <label>
           <input
             type="radio"
             value="bike"
@@ -364,8 +392,8 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <h4 style={{display: 'flex', alignSelf: 'center'}}>Distance: {pathDistance.toFixed(3)}
-        <button style={{padding: '5px', marginLeft: '5px'}} onClick={toggleUnitType}>{unitType}</button>
+      <h4 style={{ display: 'flex', alignSelf: 'center' }}>Distance: {pathDistance.toFixed(3)}
+        <button style={{ padding: '5px', marginLeft: '5px' }} onClick={toggleUnitType}>{unitType}</button>
       </h4>
     )
   }
@@ -384,6 +412,7 @@ function App() {
         <h1>TRACKSTAR</h1>
         <input id='map-location' type='text' placeholder='Set Map Location' value={searchLocation}
           onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
+        <ZoomControls />
         <ul>
           <li className="navitem">Home</li>
           <li className="navitem">Tracks</li>
@@ -393,7 +422,7 @@ function App() {
       </nav>
 
       <div className="routemaker-map">
-        <MapContainer center={[43.5588, -79.7116]} zoom={13} zoomControl={false}
+        <MapContainer center={[43.5588, -79.7116]} zoom={mapZoom} zoomControl={false}
           style={{ height: "100vh", width: "100%" }} >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -409,6 +438,7 @@ function App() {
           <Polyline positions={markersPos} color='red' />
           <CenterMap center={mapCenter} />
           <MoveMap />
+          <ZoomControlsRef />
         </MapContainer>
       </div>
 
@@ -444,7 +474,7 @@ function App() {
 
           <div className='load-route'>
             <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
-            onChange={(e) => { setSelectedRoute(e.target.value) }}>
+              onChange={(e) => { setSelectedRoute(e.target.value) }}>
               <option value='' disabled>Choose route to load</option>
               {Object.keys(allRoutes).map((route, idx) => {
                 return <option key={idx}>{route}</option>

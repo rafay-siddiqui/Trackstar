@@ -73,7 +73,7 @@
 .route-options-select {
   display: flex;
   background-color: rgba(0,0,0,0.3);
-  padding: 5px;
+  padding: 0px 3px 0px 3px;
   border-radius: 20px;
   margin-bottom: 10px;
 }
@@ -84,6 +84,7 @@
   background-color: #ccc;
   border: none;
   transition: background-color 0.3s;
+  color: white;
 }
 
 .route-options-select >button:first-child {
@@ -96,6 +97,7 @@
 
 .route-options-select > button.selected {
   background-color: skyblue;
+  color: #03ae08;
 }
 
 .routemaker-form {
@@ -127,7 +129,22 @@
 
 .activity-select {
   display: flex;
+}
+
+.activity-select > label {
+  display: flex;
   margin: 0px;
+  align-items: center;
+}
+
+.activity-select > label > img {
+  width: 28px;
+  height: 28px;
+}
+
+.activity-select > label:last-child > img {
+  width: 32px;
+  height: 32px;
 }
 
 h4 {
@@ -176,4 +193,8 @@ button:disabled {
 
 .load-route select {
   flex-grow: 2;
+}
+
+.zoom-button {
+
 }
