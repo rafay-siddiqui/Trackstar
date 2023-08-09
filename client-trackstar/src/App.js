@@ -447,8 +447,8 @@ function App() {
 
       <div className="route-options">
         <div className='route-options-select'>
-          <button className={menuMode === 'route' && 'selected'} onClick={() => setMenuMode('route')}>Route Creation</button>
-          <button className={menuMode === 'calories' && 'selected'} onClick={() => setMenuMode('calories')}>Workout Tracking</button>
+          <button className={menuMode === 'route' && 'selected'} onClick={() => setMenuMode('route')}>Track Creation</button>
+          <button className={menuMode === 'calories' && 'selected'} onClick={() => setMenuMode('calories')}>Workout Logging</button>
         </div>
 
         {menuMode === 'calories' && <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />}
@@ -470,7 +470,7 @@ function App() {
           <DistanceDisplay />
 
           <div className='save-route'>
-            <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Route Name' value={routeName} onChange={handleRouteNameChange} />
+            <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Track Name' value={routeName} onChange={handleRouteNameChange} />
             <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
               < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>{Object.keys(allRoutes).includes(routeName) ? "Overwrite Route" : "Save Route"}</button>
           </div>
@@ -478,7 +478,7 @@ function App() {
           <div className='load-route'>
             <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
               onChange={(e) => { setSelectedRoute(e.target.value) }}>
-              <option value='' disabled>Choose route to load</option>
+              <option value='' disabled>Choose Track to Load</option>
               {Object.keys(allRoutes).map((route, idx) => {
                 return <option key={idx}>{route}</option>
               })}
