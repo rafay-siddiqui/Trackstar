@@ -157,9 +157,9 @@ function App() {
     }
 
     return (
-      <div>
-        <button className='zoom-button' onClick={() => { handleZoomTo(18) }}>Close</button>
-        <button className='zoom-button' onClick={() => { handleZoomTo(15) }}>Far</button>
+      <div className='zoom-buttons'>
+        <button onClick={() => { handleZoomTo(18) }}>Near</button>
+        <button onClick={() => { handleZoomTo(15) }}>Far</button>
       </div>
     )
   }
@@ -171,7 +171,8 @@ function App() {
         map.setZoom(mapZoom)
         setMapZoom(null)
       }
-    }, [mapZoom])
+      // eslint-disable-next-line
+    }, [mapZoom, map])
   }
 
   const haversineDistance = (coords1, coords2, isMiles = false) => {
@@ -408,11 +409,13 @@ function App() {
 
   return (
     <div className='App'>
-      <nav className="navbar">
+      <nav className="navbar" >
+        <div className='map-controls' >
+          <ZoomControls />
+          <input id='map-location' type='text' placeholder='Set Map Location' value={searchLocation}
+            onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
+        </div>
         <h1>TRACKSTAR</h1>
-        <input id='map-location' type='text' placeholder='Set Map Location' value={searchLocation}
-          onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
-        <ZoomControls />
         <ul>
           <li className="navitem">Home</li>
           <li className="navitem">Tracks</li>

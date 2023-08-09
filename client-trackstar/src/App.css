@@ -35,21 +35,49 @@
   color: skyblue;
 }
 
+.map-controls {
+  display: flex;
+  align-items: center;
+  margin-left: 15px;
+}
+
 #map-location {
-  height: 20px;
+  height: 10px;
   font-size: large;
   text-align: center;
   margin: 5px;
-  margin-left: 100px;
-  width: 550px;
+  width: 175px;
   border-radius: 25px;
   background: rgba(255,255,255,0.80);
   box-shadow: 0 0 25px whitesmoke;
   outline: none;
+  transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  cursor: pointer;
 }
 
 #map-location:focus {
   box-shadow: 0 0 10px rgba(50,200,50,0.8);
+  width: 400px;
+  height: 20px;
+  cursor: auto;
+}
+
+.zoom-buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+.zoom-buttons button {
+  margin: 1px;
+  font-size: smaller;
+}
+
+.zoom-buttons button:first-child {
+  border-radius: 12px 12px 0px 0px;
+}
+
+.zoom-buttons button:last-child {
+  border-radius: 0px 0px 12px 12px;
 }
 
 .routemaker-map {
@@ -193,8 +221,4 @@ button:disabled {
 
 .load-route select {
   flex-grow: 2;
-}
-
-.zoom-button {
-
 }
