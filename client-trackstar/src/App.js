@@ -11,6 +11,8 @@ import loadingIconUrl from './images/loading-marker-200px.gif'
 import walkingIcon from './images/person-walking.svg'
 import runningIcon from './images/person-running.svg'
 import bikingIcon from './images/person-biking.svg'
+import saveIcon from './images/floppy-disk.svg'
+import loadIcon from './images/route-solid.svg'
 
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
