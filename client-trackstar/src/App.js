@@ -13,6 +13,7 @@ import runningIcon from './images/person-running.svg'
 import bikingIcon from './images/person-biking.svg'
 import saveIcon from './images/floppy-disk.svg'
 import loadIcon from './images/route-solid.svg'
+import overwriteIcon from './images/pencil-solid.svg'
 
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
@@ -251,6 +252,7 @@ function App() {
     setMarkersPos([])
     setLoadingPos([]);
     setPathDistance(0)
+    setRouteName('')
   }
 
   const saveRoute = () => {
@@ -471,10 +473,16 @@ function App() {
 
           <DistanceDisplay />
 
-          <div className='save-route'>
+          <div className='save-route' style={{ display: 'flex', alignItems: 'center' }}>
             <input ref={routeNameInputRef} disabled={markersPos.length < 2} type='text' placeholder='Enter Track Name' value={routeName} onChange={handleRouteNameChange} />
-            <button onClick={saveRoute} style={routeName.length < 1 || markersPos.length
-              < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}}>{Object.keys(allRoutes).includes(routeName) ? "Overwrite Route" : "Save Route"}</button>
+
+            {Object.keys(allRoutes).includes(routeName) ?
+              <img className='track-history-icon' onClick={saveRoute} style={routeName.length < 1 || markersPos.length
+                < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}} src={overwriteIcon} alt='Overwrite Route' /> :
+              <img className='track-history-icon' onClick={saveRoute} style={routeName.length < 1 || markersPos.length
+                < 2 ? { opacity: 0.5, cursor: 'not-allowed' } : {}} src={saveIcon} alt='Save Route' />
+            }
+
           </div>
 
           <div className='load-route'>
@@ -485,8 +493,8 @@ function App() {
                 return <option key={idx}>{route}</option>
               })}
             </select>
-            <button onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
-              { opacity: 0.5, cursor: 'not-allowed' } : {}}>Load Route</button>
+            <img className='track-history-icon' onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
+              { opacity: 0.5, cursor: 'not-allowed' } : {}} src={loadIcon} alt='Load Route' />
           </div>
 
         </div>}
