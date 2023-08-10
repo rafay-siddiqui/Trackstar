@@ -213,6 +213,8 @@ button:disabled {
 
 .save-route input {
   flex-grow: 2;
+  border: none;
+  color: black;
 }
 
 .load-route {
@@ -221,6 +223,9 @@ button:disabled {
 
 .load-route select {
   flex-grow: 2;
+  background-color: rgba(255,255,255,0.55);
+  border: none;
+  color: black;
 }
 
 .track-history-icon {

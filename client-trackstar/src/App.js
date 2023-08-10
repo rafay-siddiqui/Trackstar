@@ -488,7 +488,7 @@ function App() {
           <div className='load-route'>
             <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
               onChange={(e) => { setSelectedRoute(e.target.value) }}>
-              <option value='' disabled>Choose Track to Load</option>
+              <option value='' >Choose Track to Load</option>
               {Object.keys(allRoutes).map((route, idx) => {
                 return <option key={idx}>{route}</option>
               })}
