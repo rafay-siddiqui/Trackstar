@@ -403,11 +403,9 @@ function App() {
     )
   }
 
-  function LoginButton() {
+  function DemoProfile() {
     return (
-      <button>
-        Login
-      </button>
+      <img src={null} alt='User Profile'/>
     )
   }
 
@@ -421,10 +419,7 @@ function App() {
         </div>
         <h1>TRACKSTAR</h1>
         <ul>
-          <li className="navitem">Home</li>
-          <li className="navitem">Tracks</li>
-          <li className="navitem">History</li>
-          <LoginButton />
+          <DemoProfile />
         </ul>
       </nav>
 
