@@ -424,7 +424,7 @@ function App() {
 
   function DemoProfile() {
     return (
-      <div className='user-profile'>
+      <div className='user-profile' >
         {userProfile && (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <h2 style={{ margin: '0px', marginRight: '10px' }}>{userProfile.name}</h2>
@@ -463,7 +463,7 @@ function App() {
 
       <div className="routemaker-map">
         <MapContainer center={[43.5588, -79.7116]} zoom={mapZoom} zoomControl={false}
-          style={{ height: "100vh", width: "100%" }} >
+          style={{ height: "100vh", width: "100%"}} >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -488,7 +488,12 @@ function App() {
           <button className={menuMode === 'calories' ? 'selected' : ''} onClick={() => setMenuMode('calories')}>Workout Logging</button>
         </div>
 
-        {menuMode === 'calories' && <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />}
+        {menuMode === 'calories' && (
+          <>
+            <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />
+            <DistanceDisplay />
+          </>
+        )}
 
         {menuMode === 'route' && <div className="routemaker-form">
           <div className={'marker-controls'}>

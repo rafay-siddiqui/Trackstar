@@ -33,7 +33,7 @@
 }
 
 .navbar h1 {
-  font-size: xx-large;
+  font-size: 8vh;
   color: white;
   margin: 0px;
 }
@@ -104,6 +104,23 @@
   border-radius: 0px 0px 12px 12px;
 }
 
+.user-profile {
+  background-color: rgb(0,0,0,0.1);
+  padding: 5px 20px 5px 20px; 
+  margin: 0px;
+  border-radius: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.user-profile:hover {
+  background-color: rgb(0,0,0,0.2);
+}
+
+.user-profile > div > h2 {
+  font-weight: 200;
+  font-size: xx-large;
+}
+
 .routemaker-map {
   position: absolute;
   top: 0px;
@@ -120,6 +137,7 @@
   background-color: rgba(50,200,50,0.8);
   text-align: center;
   border-radius: 10px;
+  min-width: 287.7px;
 }
 
 .route-options-select {
@@ -258,10 +276,6 @@ button:disabled {
   width: 36px;
   cursor: pointer;
   opacity: 0.7;
-}
-
-.user-profile {
-  margin: 10px;
 }
 
 .profile-picture {
