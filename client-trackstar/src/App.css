@@ -9,22 +9,33 @@
   position: relative;
   z-index: 1;
   transition: background-color 0.3s ease;
+  min-height: 95px;
 }
 
 .navbar:hover {
   background-color: rgba(96, 201, 243,0.95);
 }
 
-.navbar ul {
+.map-controls,
+.title-container,
+.profile-container {
+  flex: 1;
   display: flex;
-  list-style-type: none;
+  align-items: center;
+}
+
+.title-container {
+  justify-content: center;
+}
+
+.profile-container {
+  justify-content: flex-end;
 }
 
 .navbar h1 {
   font-size: xx-large;
   color: white;
   margin: 0px;
-  margin-right: 90px;
 }
 
 .navitem {
@@ -36,28 +47,41 @@
   color: skyblue;
 }
 
-.map-controls {
-  display: flex;
-  align-items: center;
-}
-
 #map-location {
-  height: 10px;
+  height: 15px;
   font-size: large;
   text-align: center;
   margin: 5px;
-  width: 175px;
+  width: 160px;
   border-radius: 25px;
-  background: rgba(255,255,255,0.80);
-  box-shadow: 0 0 25px whitesmoke;
+  background: rgba(50,200,50,0.8);
+  color: whitesmoke;
   outline: none;
   transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
 }
 
+@keyframes breathingShadow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(245, 245, 245, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 20px whitesmoke;
+  }
+}
+
+#map-location.empty:not(:focus) {
+  animation: breathingShadow 2s infinite ease-in-out;
+}
+
+#map-location::placeholder {
+  color: whitesmoke;
+}
+
 #map-location:focus {
-  box-shadow: 0 0 10px rgba(50,200,50,0.8);
-  width: 400px;
+  box-shadow: 0 0 15px rgba(50,200,50,0.8);
+  background: rgba(255,255,255,0.10);
+  width: 350px;
   height: 20px;
   cursor: auto;
 }

@@ -85,11 +85,14 @@ function App() {
 
   useEffect(() => {
     const fetchDemoUser = async () => {
-      const response = await axios.get(`${databaseServerURL}/fetch-demo-user`)
-      if (response.status === 200 && response.data) {
-        setUserProfile(response.data.user)
-      } else {
+      try {
+        const response = await axios.get(`${databaseServerURL}/fetch-demo-user`)
+        if (response.status === 200 && response.data) {
+          setUserProfile(response.data.user)
+        }
+      } catch {
         console.error("Could not contact database to fetch demo user profile")
+        setUserProfile(null)
       }
     }
     fetchDemoUser();
@@ -431,8 +434,15 @@ function App() {
             />
           </ div>
         )}
+        {!userProfile && <LoginButton />}
       </div>
     );
+  }
+
+  function LoginButton() {
+    return (
+      <button>Log In</button>
+    )
   }
 
   return (
@@ -440,11 +450,15 @@ function App() {
       <nav className="navbar" >
         <div className='map-controls' >
           <ZoomControls />
-          <input id='map-location' type='text' placeholder='Set Map Location' value={searchLocation}
+          <input id='map-location' className={searchLocation ? '' : 'empty'} type='text' placeholder='Set Map Location' value={searchLocation}
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
         </div>
-        <h1>TRACKSTAR</h1>
-        <DemoProfile />
+        <div className='title-container'>
+          <h1>TRACKSTAR</h1>
+        </div>
+        <div className='profile-container' >
+          <DemoProfile />
+        </div>
       </nav>
 
       <div className="routemaker-map">
