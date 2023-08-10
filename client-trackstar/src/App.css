@@ -23,6 +23,7 @@
 .navbar h1 {
   font-size: xx-large;
   color: white;
+  margin: 0px;
   margin-right: 90px;
 }
 
@@ -233,4 +234,17 @@ button:disabled {
   width: 36px;
   cursor: pointer;
   opacity: 0.7;
+}
+
+.user-profile {
+  margin: 10px;
+}
+
+.profile-picture {
+  width: 75px; /* Width of the circular container */
+  height: 75px; /* Height of the circular container */
+  border-radius: 50%;
+  background-size: cover; /* This will make sure the image covers the entire container */
+  background-position: left top; /* This positions the image to the left and top of the container */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
 }

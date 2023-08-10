@@ -86,8 +86,10 @@ function App() {
   useEffect(() => {
     const fetchDemoUser = async () => {
       const response = await axios.get(`${databaseServerURL}/fetch-demo-user`)
-      if (response.status === 200) {
-        console.log(response)
+      if (response.status === 200 && response.data) {
+        setUserProfile(response.data.user)
+      } else {
+        console.error("Could not contact database to fetch demo user profile")
       }
     }
     fetchDemoUser();
@@ -266,6 +268,7 @@ function App() {
     setLoadingPos([]);
     setPathDistance(0)
     setRouteName('')
+    setSelectedRoute('')
   }
 
   const saveRoute = () => {
@@ -418,8 +421,18 @@ function App() {
 
   function DemoProfile() {
     return (
-      <img src={null} alt='User Profile' />
-    )
+      <div className='user-profile'>
+        {userProfile && (
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <h2 style={{ margin: '0px', marginRight: '10px' }}>{userProfile.name}</h2>
+            <div
+              className='profile-picture'
+              style={{ backgroundImage: `url(${userProfile.picture})` }}
+            />
+          </ div>
+        )}
+      </div>
+    );
   }
 
   return (
@@ -431,9 +444,7 @@ function App() {
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
         </div>
         <h1>TRACKSTAR</h1>
-        <ul>
-          <DemoProfile />
-        </ul>
+        <DemoProfile />
       </nav>
 
       <div className="routemaker-map">
@@ -470,7 +481,7 @@ function App() {
             <button className={'enable-markers'} onClick={toggleCreatingRoute}>{creatingRoute ? "Placing Markers..." : "Place Markers"}</button>
             <div className={'edit-markers'}>
               <button onClick={undoMarker} disabled={markersPos.length < 1}>Undo</button>
-              <button onClick={resetRoute} disabled={markersPos.length < 1}>Reset</button>
+              <button onClick={resetRoute} disabled={markersPos.length < 1 && !selectedRoute && !routeName}>Reset</button>
             </div>
           </div>
 
