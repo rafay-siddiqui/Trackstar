@@ -60,7 +60,10 @@ let InvisibleIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
+const databaseServerURL = "http://localhost:8080"
+
 function App() {
+  const [userProfile, setUserProfile] = useState(null)
   const [markersPos, setMarkersPos] = useState([]);
   const [loadingPos, setLoadingPos] = useState([]);
   const [mapCenter, setMapCenter] = useState([43.5588, -79.7116]);
@@ -79,6 +82,16 @@ function App() {
   const [selectedActivity, setSelectedActivity] = useState('walking')
   const [menuMode, setMenuMode] = useState('route')
   const [mapZoom, setMapZoom] = useState(13);
+
+  useEffect(() => {
+    const fetchDemoUser = async () => {
+      const response = await axios.get(`${databaseServerURL}/fetch-demo-user`)
+      if (response.status === 200) {
+        console.log(response)
+      }
+    }
+    fetchDemoUser();
+  }, [])
 
   const getActivityType = () => {
     if (selectedActivity === 'walking' || selectedActivity === 'running') {
@@ -354,7 +367,7 @@ function App() {
 
   function ActivityToggle() {
     return (
-      <div className={'activity-select'} >
+      <div className='activity-select' >
         <label>
           <input
             type="radio"
@@ -405,7 +418,7 @@ function App() {
 
   function DemoProfile() {
     return (
-      <img src={null} alt='User Profile'/>
+      <img src={null} alt='User Profile' />
     )
   }
 
@@ -446,8 +459,8 @@ function App() {
 
       <div className="route-options">
         <div className='route-options-select'>
-          <button className={menuMode === 'route' && 'selected'} onClick={() => setMenuMode('route')}>Track Creation</button>
-          <button className={menuMode === 'calories' && 'selected'} onClick={() => setMenuMode('calories')}>Workout Logging</button>
+          <button className={menuMode === 'route' ? 'selected' : ''} onClick={() => setMenuMode('route')}>Track Creation</button>
+          <button className={menuMode === 'calories' ? 'selected' : ''} onClick={() => setMenuMode('calories')}>Workout Logging</button>
         </div>
 
         {menuMode === 'calories' && <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />}
