@@ -30,7 +30,7 @@ app.get('/', (req, res) => {
 });
 
 //GET demo user profile (name, profile picture)
-app.get('/fetchdemouser', async (req, res) => {
+app.get('/fetch-demo-user', async (req, res) => {
   try {
     const user = await user_model.fetchDemoUser();
     res.json({ user });
