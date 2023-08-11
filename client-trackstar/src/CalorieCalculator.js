@@ -3,12 +3,13 @@ import { useEffect, useState } from 'react';
 function CalorieCalculator({ distance, unit, activity, routeName }) {
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
-  const [pace, setPace] = useState(distance / (hours + minutes / 60))
+  const [pace, setPace] = useState(null)
   const [intensity, setIntensity] = useState(0)
   const [weight, setWeight] = useState(0)
   const [weightUnit, setWeightUnit] = useState('kg')
   const [caloriesBurned, setCaloriesBurned] = useState(0)
   const [workoutHistory, setWorkoutHistory] = useState({})
+  const [showPaceWarning, setShowPaceWarning] = useState(false)
 
   const saveWorkout = () => {
     if ((hours || minutes) && weight) {
@@ -21,19 +22,31 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
   }
 
   useEffect(() => {
-    setPace(distance / (parseInt(hours) + parseFloat(minutes / 60)))
+    const totalHours = parseInt(hours, 10) + parseInt(minutes, 10) / 60
+    totalHours > 0 ? setPace(distance / totalHours) : setPace(0)
   }, [hours, minutes, distance])
+
+  useEffect(() => {
+    if (weight > 0 && ((unit === 'km' && pace < 3.22) || (unit === 'miles' && pace < 2.0))) {
+      setShowPaceWarning(true)
+      console.log('true')
+    } else {
+      setShowPaceWarning(false)
+      console.log('false', weight, unit)
+    }
+  }, [pace, unit, weight])
 
   useEffect(() => {
     function footMET(pace) {
       let minMET, maxMET;
       if (unit === 'km') pace *= 0.621371;
 
-      if (pace <= 2.0) { minMET = 2.5; maxMET = 2.8; }
+      if (pace <= 1.0) { minMET = 1.0; maxMET = 2.0; }
+      else if (pace <= 2.0) { minMET = 2.0; maxMET = 2.8; }
       else if (pace <= 2.5) { minMET = 2.8; maxMET = 3.0; }
-      else if (pace <= 3.0) { minMET = 3.0; maxMET = 3.3; }
-      else if (pace <= 3.5) { minMET = 3.3; maxMET = 3.8; }
-      else if (pace <= 4.0) { minMET = 3.8; maxMET = 5.0; }
+      else if (pace <= 3.0) { minMET = 3.0; maxMET = 3.5; }
+      else if (pace <= 3.5) { minMET = 3.5; maxMET = 4.3; }
+      else if (pace <= 4.0) { minMET = 4.3; maxMET = 5.0; }
       else if (pace <= 4.5) { minMET = 5.0; maxMET = 7.0; }
       else if (pace <= 5) { minMET = 7.0; maxMET = 8.3; }
       else if (pace <= 6) { minMET = 8.3; maxMET = 9.8; }
@@ -69,8 +82,8 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
   useEffect(() => {
     let calcWeight = weight;
     if (weightUnit === 'lbs') { calcWeight *= 0.453592 }
-    const minCalories = intensity.min * calcWeight * (parseInt(hours) + parseFloat(minutes / 60));
-    const maxCalories = intensity.max * calcWeight * (parseInt(hours) + parseFloat(minutes / 60));
+    const minCalories = intensity.min * 3.5 * calcWeight /200 * (parseInt(hours, 10) * 60 + parseInt(minutes, 10));
+    const maxCalories = intensity.max * 3.5 * calcWeight /200 * (parseInt(hours, 10) * 60 + parseInt(minutes, 10));
     setCaloriesBurned({ min: minCalories, max: maxCalories });
   }, [intensity, weight, hours, minutes, weightUnit]);
 
@@ -118,10 +131,8 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
         <button onClick={toggleWeightUnit}>{weightUnit}</button>
       </label>
       <br />
+      {showPaceWarning && <h5 style={{color: 'orangered', margin: '3px'}} >A pace below 3.22kmph or 2.0mph may provide inaccurate burned calories estimations</h5>}
       <span>{`Burned between ${parseFloat(caloriesBurned.min).toFixed(0)} and ${parseFloat(caloriesBurned.max).toFixed(0)} calories`}</span>
-      <br />
-      <span>{`intensity is ${intensity.min} and ${intensity.max} hours is ${hours} minutes is ${minutes} weight is ${weight} 
-      weight unit is ${weightUnit} pace is ${pace} distance is ${distance} activity is ${activity} unit is ${unit}`}</span>
 
       <br />
       <button onClick={saveWorkout}>Save workout</button>
