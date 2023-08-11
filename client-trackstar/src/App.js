@@ -117,8 +117,8 @@ function App() {
         return [latitude, longitude, true]
       })
     } else {
-      console.error("Could not snap route to road")
       setLoadingPos([])
+      console.error("Could not snap route to road")
     }
   }
 
@@ -422,6 +422,22 @@ function App() {
     )
   }
 
+  function RouteLoader() {
+    return (
+      <div className='load-route'>
+        <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
+          onChange={(e) => { setSelectedRoute(e.target.value) }}>
+          <option value='' >Choose Track to Load</option>
+          {Object.keys(allRoutes).map((route, idx) => {
+            return <option key={idx}>{route}</option>
+          })}
+        </select>
+        <img className='track-history-icon' onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
+          { opacity: 0.5, cursor: 'not-allowed' } : {}} src={loadIcon} alt='Load Route' />
+      </div>
+    )
+  }
+
   function DemoProfile() {
     const [showLogout, setShowLogout] = useState(false)
     const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 })
@@ -432,7 +448,9 @@ function App() {
     const handleClickOutside = (event) => {
       if (
         popupRef.current &&
-        !popupRef.current.contains(event.target)
+        !popupRef.current.contains(event.target) &&
+        profileRef.current &&
+        !profileRef.current.contains(event.target)
       ) {
         setShowLogout(false);
       }
@@ -454,10 +472,11 @@ function App() {
         });
       }
       setShowLogout(!showLogout);
-      if (showLogout === false) {
-        setDemoLogout(false);
-      }
     }
+
+    useEffect(() => {
+      showLogout === false && setDemoLogout(false);
+    }, [showLogout])
 
     return (
       <>
@@ -487,22 +506,6 @@ function App() {
   function LoginButton() {
     return (
       <button>Log In</button>
-    )
-  }
-
-  function RouteLoader() {
-    return (
-      <div className='load-route'>
-        <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
-          onChange={(e) => { setSelectedRoute(e.target.value) }}>
-          <option value='' >Choose Track to Load</option>
-          {Object.keys(allRoutes).map((route, idx) => {
-            return <option key={idx}>{route}</option>
-          })}
-        </select>
-        <img className='track-history-icon' onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
-          { opacity: 0.5, cursor: 'not-allowed' } : {}} src={loadIcon} alt='Load Route' />
-      </div>
     )
   }
 
