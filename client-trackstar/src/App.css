@@ -50,6 +50,7 @@ background-color: rgba(96, 201, 243, 0.8);
   color: white;
   margin: 0px;
   transition: letter-spacing 0.7s ease-in-out;
+  user-select: none;
 }
 
 @keyframes spreadLetters {

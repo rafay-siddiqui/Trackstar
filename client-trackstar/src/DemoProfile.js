@@ -45,7 +45,7 @@ function DemoProfile({ userProfile, }) {
       <div className='user-profile user-profile-bg' onClick={togglePopup} ref={profileRef} >
         {userProfile && (
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h2 style={{ margin: '0px', marginRight: '10px' }}>{userProfile.name}</h2>
+            <h2 style={{ margin: '0px', marginRight: '10px', userSelect: 'none' }}>{userProfile.name}</h2>
             <div
               className='profile-picture'
               style={{ backgroundImage: `url(${userProfile.picture})` }}
