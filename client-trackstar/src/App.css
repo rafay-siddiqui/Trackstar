@@ -57,11 +57,11 @@ background-color: rgba(96, 201, 243, 0.8);
   letter-spacing: 10px;
   color: rgb(255, 215, 0);
   margin: 0px;
-  transition: letter-spacing 0.7s ease-in-out, background-color 1s ease, border-color 1s ease, text-shadow 2s ease;
+  transition: letter-spacing 0.7s ease-in-out, background-color 1s ease, border-color 1s ease, text-shadow 1s ease;
   user-select: none;
   background-color: var(--background-colour-title);
-  text-shadow: 0 0 3px var(--primary-colour-title), 0 0 3px var(--primary-colour-title), 0 0 3px var(--primary-colour-title), 0 0 6px var(--primary-colour-title), 
-  0 0 6px var(--primary-colour-title), 0 0 9px var(--primary-colour-title), 0 0 9px var(--primary-colour-title);
+  text-shadow: 0 0 6px var(--primary-colour-title), 0 0 6px var(--primary-colour-title), 0 0 6px var(--primary-colour-title), 0 0 9px var(--primary-colour-title), 
+  0 0 9px var(--primary-colour-title), 0 0 12px var(--primary-colour-title), 0 0 12px var(--primary-colour-title);
   border-radius: 50%;
   border: 10px outset var(--border-colour-title);
 }
