@@ -20,26 +20,6 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
     }
   }
 
-  // const saveRoute = () => {
-  //   if (routeName.length < 1 || markersPos.length < 2) {
-  //     routeNameInputRef.current.focus()
-  //   } else if (routeName.length > 0) {
-  //     let newAllRoutes = { ...allRoutes }
-  //     newAllRoutes[routeName] = {
-  //       markersPos: markersPos,
-  //       pathDistance: pathDistance,
-  //       unitType: unitType,
-  //       mapCenter: [(markersPos[0][0] + markersPos[markersPos.length - 1][0]) / 2,
-  //       (markersPos[0][1] + markersPos[markersPos.length - 1][1]) / 2]
-  //     }
-  //     setAllRoutes(newAllRoutes)
-  //     setRouteName('')
-  //     resetRoute()
-  //     setCreatingRoute(false)
-  //     setPointSnapping(true)
-  //   }
-  // }
-
   useEffect(() => {
     setPace(distance / (parseInt(hours) + parseFloat(minutes / 60)))
   }, [hours, minutes, distance])
