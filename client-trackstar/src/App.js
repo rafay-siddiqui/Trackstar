@@ -14,6 +14,7 @@ import bikingIcon from './images/person-biking.svg'
 import saveIcon from './images/floppy-disk.svg'
 import loadIcon from './images/route-solid.svg'
 import overwriteIcon from './images/pencil-solid.svg'
+import locationDotIcon from './images/location-dot.svg'
 
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
@@ -510,7 +511,7 @@ function App() {
   }
 
   return (
-    <div className='App'>
+    <div className='App' style={creatingRoute ? {cursor: `url(${locationDotIcon}) 16 34, auto`} : {}}>
       <nav className="navbar" >
         <div className='map-controls' >
           <ZoomControls />
@@ -525,9 +526,9 @@ function App() {
         </div>
       </nav>
 
-      <div className="routemaker-map">
+      <div className="routemaker-map" style={{cursor: 'inherit'}}>
         <MapContainer center={[43.5588, -79.7116]} zoom={mapZoom} zoomControl={false}
-          style={{ height: "100vh", width: "100%" }} >
+          style={{ height: "100vh", width: "100%", cursor: 'inherit' }} >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors | Rafay Siddiqui'

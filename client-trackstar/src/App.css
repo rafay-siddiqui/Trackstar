@@ -14,6 +14,7 @@
 
 .navbar:hover {
   background-color: rgba(96, 201, 243,0.95);
+  cursor: auto;
 }
 
 .map-controls,
@@ -144,6 +145,7 @@
 
 .user-profile:hover {
   background-color: rgb(0,0,0,0.2);
+  cursor: pointer;
 }
 
 .user-profile > div > h2 {
@@ -168,6 +170,7 @@
   text-align: center;
   border-radius: 10px;
   min-width: 287.7px;
+  cursor: auto;
 }
 
 .route-options-select {
