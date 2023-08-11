@@ -416,26 +416,71 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <h4 style={{ display: 'flex', alignSelf: 'center' }}>Distance: {pathDistance.toFixed(3)}
+      <h4 style={{ display: 'flex', alignSelf: 'center' }}>Distance: {pathDistance.toFixed(2)}
         <button style={{ padding: '5px', marginLeft: '5px' }} onClick={toggleUnitType}>{unitType}</button>
       </h4>
     )
   }
 
   function DemoProfile() {
+    const [showLogout, setShowLogout] = useState(false)
+    const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 })
+    const profileRef = useRef(null)
+    const [demoLogout, setDemoLogout] = useState(false)
+    const popupRef = useRef(null)
+
+    const handleClickOutside = (event) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target)
+      ) {
+        setShowLogout(false);
+      }
+    };
+
+    useEffect(() => {
+      document.addEventListener('mouseup', handleClickOutside);
+      return () => {
+        document.removeEventListener('mouseup', handleClickOutside);
+      };
+    }, []);
+
+    const togglePopup = () => {
+      if (profileRef.current) {
+        const profileRect = profileRef.current.getBoundingClientRect();
+        setPopupPosition({
+          top: profileRect.bottom + 1,
+          left: profileRect.left + 20,
+        });
+      }
+      setShowLogout(!showLogout);
+      if (showLogout === false) {
+        setDemoLogout(false);
+      }
+    }
+
     return (
-      <div className='user-profile' >
-        {userProfile && (
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <h2 style={{ margin: '0px', marginRight: '10px' }}>{userProfile.name}</h2>
-            <div
-              className='profile-picture'
-              style={{ backgroundImage: `url(${userProfile.picture})` }}
-            />
-          </ div>
+      <>
+        <div className='user-profile' onClick={togglePopup} ref={profileRef} >
+          {userProfile && (
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <h2 style={{ margin: '0px', marginRight: '10px' }}>{userProfile.name}</h2>
+              <div
+                className='profile-picture'
+                style={{ backgroundImage: `url(${userProfile.picture})` }}
+              />
+            </ div>
+          )}
+          {!userProfile && <LoginButton />}
+        </div>
+        {showLogout && (
+          <div ref={popupRef} className="logout-popup" style={popupPosition}>
+            <button onClick={() => { setDemoLogout(true) }}>Log Out</button>
+            <br />
+            {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Logout unavailable in demo</span>}
+          </div>
         )}
-        {!userProfile && <LoginButton />}
-      </div>
+      </>
     );
   }
 
@@ -463,7 +508,7 @@ function App() {
 
       <div className="routemaker-map">
         <MapContainer center={[43.5588, -79.7116]} zoom={mapZoom} zoomControl={false}
-          style={{ height: "100vh", width: "100%"}} >
+          style={{ height: "100vh", width: "100%" }} >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
@@ -491,6 +536,7 @@ function App() {
         {menuMode === 'calories' && (
           <>
             <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />
+            <ActivityToggle />
             <DistanceDisplay />
           </>
         )}

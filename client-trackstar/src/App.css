@@ -32,10 +32,40 @@
   justify-content: flex-end;
 }
 
+.logout-popup {
+  position: fixed;
+  min-width: 150px;
+  padding: 10px 30px 10px 30px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 0px 0px 25px 25px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+  text-align: center;
+  z-index: 2;
+}
+
 .navbar h1 {
   font-size: 8vh;
+  letter-spacing: 10px;
   color: white;
   margin: 0px;
+  transition: letter-spacing 0.7s ease-in-out;
+}
+
+@keyframes spreadLetters {
+  0% {
+    letter-spacing: 10px;
+  }
+  50% {
+    letter-spacing: 10px;
+  }
+  100% {
+    letter-spacing: 20px;
+  }
+}
+
+.navbar:hover h1 {
+  animation: spreadLetters 0.7s ease-in-out;
+  letter-spacing: 20px;
 }
 
 .navitem {
@@ -66,7 +96,7 @@
     box-shadow: 0 0 5px rgba(245, 245, 245, 0.6);
   }
   50% {
-    box-shadow: 0 0 20px whitesmoke;
+    box-shadow: 0 0 30px whitesmoke;
   }
 }
 
@@ -81,7 +111,7 @@
 #map-location:focus {
   box-shadow: 0 0 15px rgba(50,200,50,0.8);
   background: rgba(255,255,255,0.10);
-  width: 350px;
+  width: 330px;
   height: 20px;
   cursor: auto;
 }
