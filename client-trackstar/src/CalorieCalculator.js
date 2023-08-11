@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function CalorieCalculator({ distance, unit, activity, routeName }) {
+function CalorieCalculator({ distance, unit, activity, routeName, RouteLoader }) {
   const [hours, setHours] = useState(0)
   const [minutes, setMinutes] = useState(0)
   const [pace, setPace] = useState(null)
@@ -17,7 +17,6 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
       const newWorkoutHistory = { ...workoutHistory }
       newWorkoutHistory[time] = { name: routeName, hours, minutes, distance, unit, caloriesBurned, weight, weightUnit, activity }
       setWorkoutHistory(newWorkoutHistory)
-      console.log(workoutHistory)
     }
   }
 
@@ -29,10 +28,8 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
   useEffect(() => {
     if (weight > 0 && ((unit === 'km' && pace < 3.22) || (unit === 'miles' && pace < 2.0))) {
       setShowPaceWarning(true)
-      console.log('true')
     } else {
       setShowPaceWarning(false)
-      console.log('false', weight, unit)
     }
   }, [pace, unit, weight])
 
@@ -99,6 +96,7 @@ function CalorieCalculator({ distance, unit, activity, routeName }) {
 
   return (
     <div>
+      <RouteLoader />
       <label>
         <input type='number' min={0} max={24} value={hours} onChange={(e) => {
           if (e.target.value <= 24 && e.target.value >= 0) {

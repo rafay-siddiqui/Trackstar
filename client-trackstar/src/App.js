@@ -490,6 +490,22 @@ function App() {
     )
   }
 
+  function RouteLoader() {
+    return (
+      <div className='load-route'>
+        <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
+          onChange={(e) => { setSelectedRoute(e.target.value) }}>
+          <option value='' >Choose Track to Load</option>
+          {Object.keys(allRoutes).map((route, idx) => {
+            return <option key={idx}>{route}</option>
+          })}
+        </select>
+        <img className='track-history-icon' onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
+          { opacity: 0.5, cursor: 'not-allowed' } : {}} src={loadIcon} alt='Load Route' />
+      </div>
+    )
+  }
+
   return (
     <div className='App'>
       <nav className="navbar" >
@@ -535,7 +551,7 @@ function App() {
 
         {menuMode === 'calories' && (
           <>
-            <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} />
+            <CalorieCalculator routeName={selectedRoute} activity={selectedActivity} distance={pathDistance} unit={unitType} RouteLoader={RouteLoader} />
             <ActivityToggle />
             <DistanceDisplay />
           </>
@@ -569,17 +585,7 @@ function App() {
 
           </div>
 
-          <div className='load-route'>
-            <select ref={loadRouteRef} value={selectedRoute} disabled={Object.keys(allRoutes).length < 1}
-              onChange={(e) => { setSelectedRoute(e.target.value) }}>
-              <option value='' >Choose Track to Load</option>
-              {Object.keys(allRoutes).map((route, idx) => {
-                return <option key={idx}>{route}</option>
-              })}
-            </select>
-            <img className='track-history-icon' onClick={() => loadRoute(selectedRoute)} style={!selectedRoute ?
-              { opacity: 0.5, cursor: 'not-allowed' } : {}} src={loadIcon} alt='Load Route' />
-          </div>
+          <RouteLoader />
 
         </div>}
       </div>
