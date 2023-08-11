@@ -44,13 +44,33 @@ background-color: rgba(96, 201, 243, 0.8);
   z-index: 2;
 }
 
+:root {
+  --primary-colour-title: rgba(255, 127, 80, 0.9);
+  --background-colour-title: rgba(255, 255, 255, 0.35);
+  --background-colour-title-transition: rgba(255, 255, 255, 0.55);
+  --border-colour-title: rgba(255, 255, 255, 0.15);
+  --border-colour-title-transition: rgba(255, 255, 255, 0.45);
+}
+
 .navbar h1 {
   font-size: 8vh;
   letter-spacing: 10px;
-  color: white;
+  color: rgb(255, 215, 0);
   margin: 0px;
-  transition: letter-spacing 0.7s ease-in-out;
+  transition: letter-spacing 0.7s ease-in-out, background-color 1s ease, border-color 1s ease, text-shadow 2s ease;
   user-select: none;
+  background-color: var(--background-colour-title);
+  text-shadow: 0 0 3px var(--primary-colour-title), 0 0 3px var(--primary-colour-title), 0 0 3px var(--primary-colour-title), 0 0 6px var(--primary-colour-title), 
+  0 0 6px var(--primary-colour-title), 0 0 9px var(--primary-colour-title), 0 0 9px var(--primary-colour-title);
+  border-radius: 50%;
+  border: 10px outset var(--border-colour-title);
+}
+
+.navbar:hover h1 {
+  background-color: var(--background-colour-title-transition);
+  border: 10px outset var(--border-colour-title-transition);
+  text-shadow: 0 0 12px var(--primary-colour-title), 0 0 12px var(--primary-colour-title), 0 0 12px var(--primary-colour-title), 0 0 15px var(--primary-colour-title), 
+  0 0 15px var(--primary-colour-title), 0 0 20px var(--primary-colour-title), 0 0 20px var(--primary-colour-title);
 }
 
 @keyframes spreadLetters {
