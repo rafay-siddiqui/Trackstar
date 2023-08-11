@@ -511,7 +511,7 @@ function App() {
   }
 
   return (
-    <div className='App' style={creatingRoute ? {cursor: `url(${locationDotIcon}) 16 34, auto`} : {}}>
+    <div className='App' style={creatingRoute ? { cursor: `url(${locationDotIcon}) 16 34, auto` } : {}}>
       <nav className="navbar" >
         <div className='map-controls' >
           <ZoomControls />
@@ -526,7 +526,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="routemaker-map" style={{cursor: 'inherit'}}>
+      <div className="routemaker-map" style={{ cursor: 'inherit' }}>
         <MapContainer center={[43.5588, -79.7116]} zoom={mapZoom} zoomControl={false}
           style={{ height: "100vh", width: "100%", cursor: 'inherit' }} >
           <TileLayer
@@ -563,7 +563,10 @@ function App() {
 
         {menuMode === 'route' && <div className="routemaker-form">
           <div className={'marker-controls'}>
-            <button className={'enable-markers'} onClick={toggleCreatingRoute}>{creatingRoute ? "Placing Markers..." : "Place Markers"}</button>
+            <button className={`enable-markers ${!creatingRoute ? 'prompt-click' : 'prompt-click-active'}`} onClick={toggleCreatingRoute} >
+              <img src={locationDotIcon} alt='Location Dot' style={{ verticalAlign: 'top', height: '20px', margin: '0px' ,marginRight: '5px' }} />
+              {creatingRoute ? "Placing Markers..." : "Place Markers"}
+            </button>
             <div className={'edit-markers'}>
               <button onClick={undoMarker} disabled={markersPos.length < 1}>Undo</button>
               <button onClick={resetRoute} disabled={markersPos.length < 1 && !selectedRoute && !routeName}>Reset</button>

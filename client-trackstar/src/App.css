@@ -214,14 +214,33 @@
   display: flex;
 }
 
+@keyframes placeMarkerPrompt {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(50,200,50,0.8);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(96, 201, 243, 0.8);
+  }
+}
+
+.prompt-click-active {
+  animation: placeMarkerPrompt 2s infinite ease-in-out;
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+.prompt-click {
+  box-shadow: 0 0 10px rgba(96, 201, 243, 0.8);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
 .enable-markers {
-  flex-grow: 3;
+  flex-grow: 5;
 }
 
 .edit-markers {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+  flex-grow: 4;
 }
 
 .loading-location {
