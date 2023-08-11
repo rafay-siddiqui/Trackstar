@@ -29,8 +29,10 @@ function DemoProfile({ userProfile, }) {
     if (profileRef.current) {
       const profileRect = profileRef.current.getBoundingClientRect();
       setPopupPosition({
-        top: profileRect.bottom + 1,
-        left: profileRect.left + 20,
+        top: profileRect.top,
+        left: profileRect.left,
+        width: profileRect.width,
+        height: profileRect.height*2,
       });
     }
     setShowLogout(!showLogout);
@@ -42,7 +44,7 @@ function DemoProfile({ userProfile, }) {
 
   return (
     <>
-      <div className='user-profile user-profile-bg' onClick={togglePopup} ref={profileRef} >
+      <div className='user-profile' onClick={togglePopup} ref={profileRef} >
         {userProfile && (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <h2 style={{ margin: '0px', marginRight: '10px', userSelect: 'none' }}>{userProfile.name}</h2>
@@ -55,7 +57,7 @@ function DemoProfile({ userProfile, }) {
         {!userProfile && <LoginButton />}
       </div>
       {showLogout && (
-        <div ref={popupRef} className="user-profile-bg logout-popup" style={popupPosition}>
+        <div ref={popupRef} className="logout-popup" style={popupPosition}>
           <button onClick={() => { setDemoLogout(true) }}>Log Out</button>
           <br />
           {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Logout unavailable in demo</span>}
