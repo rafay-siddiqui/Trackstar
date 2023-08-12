@@ -3,13 +3,14 @@
   --sky-colour-95: rgba(96, 201, 243,0.95);
   --grass-colour-80: rgba(50,200,50,0.8);
   --grass-colour-95: rgba(50,200,50,0.95);
+  --wood-colour: peru;
+  --wood-colour-60: rgba(205, 134, 63, 0.6);
   --primary-colour-title: rgb(255, 215, 0);
   --secondary-colour-title: rgba(255, 127, 80, 0.9);
   --background-colour-title: rgba(255, 0, 0, 0.7);
   --background-colour-title-transition: rgba(255, 0, 0, 0.9);
   --border-colour-title: rgba(255, 0, 0, 0.4);
   --border-colour-title-transition: rgba(255, 0, 0, 0.7);
-  --wood-colour: sienna;
 }
 
 .navbar {
@@ -77,7 +78,7 @@
   text-shadow: 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 
   0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title);
   border-radius: 50%;
-  border: 10px ridge var(--border-colour-title);
+  border: 10px outset var(--border-colour-title);
   box-shadow: 10px -5px 25px 1px var(--background-colour-title)
 }
 
@@ -97,7 +98,7 @@
   animation: spreadLetters 0.7s ease-in-out;
   letter-spacing: 20px;
   background-color: var(--background-colour-title-transition);
-  border: 10px ridge var(--border-colour-title-transition);
+  border: 10px outset var(--border-colour-title-transition);
   text-shadow: 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 
   0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title);
 }
@@ -119,7 +120,7 @@
   width: 160px;
   border-radius: 25px;
   background: rgba(255,255,255,0.9);
-  color: var(--wood-colour);
+  color: var(--grass-colour-95);
   outline: none;
   transition: width 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   cursor: pointer;
@@ -136,6 +137,7 @@
 
 #map-location.empty:not(:focus) {
   animation: breathingShadow 2s infinite ease-in-out;
+  color: var(--wood-colour);
 }
 
 #map-location::placeholder {
@@ -143,12 +145,12 @@
 }
 
 #map-location:focus::placeholder {
-  color: white;
+  color: var(--wood-colour);
 }
 
 #map-location:focus {
-  box-shadow: 0 0 15px var(--grass-colour-80);
-  background: rgba(255,255,255,0.10);
+  box-shadow: 0 0 0px white;
+  color: var(--wood-colour);
   width: 330px;
   height: 20px;
   cursor: auto;
@@ -234,6 +236,7 @@
   border: none;
   transition: background-color 0.3s;
   color: white;
+  box-shadow: none;
 }
 
 .route-options-select >button:first-child {
@@ -257,6 +260,12 @@
 
 .marker-controls {
   display: flex;
+}
+
+.distance-display {
+  display: flex;
+  align-self: center;
+  color: var(--wood-colour);
 }
 
 @keyframes placeMarkerPrompt {
@@ -341,6 +350,7 @@ button {
   cursor: pointer;
   border-radius: 5px;
   user-select: none;
+  box-shadow: 1px 1px 1px 1px var(--wood-colour-60);
 }
 
 button:disabled {
@@ -355,7 +365,16 @@ button:disabled {
 .save-route input {
   flex-grow: 2;
   border: none;
-  color: black;
+  color: white;
+  background-color: var(--wood-colour);
+}
+
+.save-route input::placeholder {
+  color: white;
+}
+
+.save-route input:disabled {
+  background-color: var(--wood-colour-60);
 }
 
 .load-route {

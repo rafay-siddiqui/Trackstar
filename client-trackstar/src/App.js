@@ -325,6 +325,7 @@ function App() {
         } else {
           alert("Location not found")
           setLocationLoading(false)
+          setSearchLocation('')
         }
       }
     }
@@ -419,7 +420,7 @@ function App() {
 
   function DistanceDisplay() {
     return (
-      <h4 style={{ display: 'flex', alignSelf: 'center', color: 'sienna', }}>Distance: {pathDistance.toFixed(2)}
+      <h4 className='distance-display' >Distance: {pathDistance.toFixed(2)}
         <button style={{ padding: '5px', marginLeft: '5px' }} onClick={toggleUnitType}>{unitType}</button>
       </h4>
     )
