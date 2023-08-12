@@ -44,7 +44,7 @@ function DemoProfile({ userProfile, }) {
 
   return (
     <>
-      <div className='user-profile' onClick={togglePopup} ref={profileRef} >
+      <div className='user-profile' id={showLogout ? 'user-profile-menu' : ''} onClick={togglePopup} ref={profileRef} >
         {userProfile && (
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <h2 style={{ margin: '0px', marginRight: '10px', userSelect: 'none' }}>{userProfile.name}</h2>
@@ -60,7 +60,7 @@ function DemoProfile({ userProfile, }) {
         <div ref={popupRef} className="logout-popup" style={popupPosition}>
           <button onClick={() => { setDemoLogout(true) }}>Log Out</button>
           <br />
-          {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Logout unavailable in demo</span>}
+          {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Currently Demo Profily Only</span>}
         </div>
       )}
     </>
