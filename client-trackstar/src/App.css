@@ -1,6 +1,6 @@
 :root {
-  --sky-colour-80: rgba(96, 201, 243, 0.8);
-  --sky-colour-95: rgba(96, 201, 243,0.95);
+  --sky-colour-80: rgba(96, 201, 243, 0.5);
+  --sky-colour-95: rgba(96, 201, 243,0.8);
   --grass-colour-80: rgba(50,200,50,0.8);
   --grass-colour-95: rgba(50,200,50,0.95);
   --wood-colour: peru;
@@ -9,8 +9,8 @@
   --secondary-colour-title: rgba(255, 127, 80, 0.9);
   --background-colour-title: rgba(255, 0, 0, 0.7);
   --background-colour-title-transition: rgba(255, 0, 0, 0.9);
-  --border-colour-title: rgba(255, 0, 0, 0.4);
-  --border-colour-title-transition: rgba(255, 0, 0, 0.7);
+  --border-colour-title: rgba(255, 127, 80, 0.4);
+  --border-colour-title-transition: rgba(255, 127, 80, 0.7);
 }
 
 .navbar {
@@ -68,18 +68,19 @@
 }
 
 .navbar h1 {
-  font-size: 8vh;
+  font-size: 4vw;
   letter-spacing: 10px;
   color: var(--primary-colour-title);
   margin: 0px;
-  transition: letter-spacing 0.7s ease-in-out, background-color 1s ease, border-color 1s ease, text-shadow 2s ease;
+  transition: letter-spacing 0.7s ease-in-out, background-color 1s ease, border-color 1s ease, text-shadow 2s ease, opacity 1s ease;
   user-select: none;
-  background-color: var(--background-colour-title);
-  text-shadow: 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 
-  0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title), 0 0 6px var(--secondary-colour-title);
+  background-color: var(--secondary-colour-title);
+  text-shadow: 0 0 6px var(--background-colour-title), 0 0 6px var(--background-colour-title), 0 0 6px var(--background-colour-title), 0 0 6px var(--background-colour-title), 
+  0 0 6px var(--background-colour-title), 0 0 6px var(--background-colour-title), 0 0 6px var(--background-colour-title);
   border-radius: 50%;
   border: 10px outset var(--border-colour-title);
-  box-shadow: 10px -5px 25px 1px var(--background-colour-title)
+  box-shadow: -5px -5px 15px 1px var(--background-colour-title);
+  opacity: 85%;
 }
 
 @keyframes spreadLetters {
@@ -97,10 +98,11 @@
 .navbar:hover h1 {
   animation: spreadLetters 0.7s ease-in-out;
   letter-spacing: 20px;
-  background-color: var(--background-colour-title-transition);
+  background-color: var(--secondary-colour-title);
   border: 10px outset var(--border-colour-title-transition);
-  text-shadow: 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 
-  0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title), 0 0 9px var(--secondary-colour-title);
+  text-shadow: 0 0 9px var(--background-colour-title-transition), 0 0 9px var(--background-colour-title-transition), 0 0 9px var(--background-colour-title-transition), 0 0 9px var(--background-colour-title-transition), 
+  0 0 9px var(--background-colour-title-transition), 0 0 9px var(--background-colour-title-transition), 0 0 9px var(--background-colour-title-transition);
+  opacity: 100%;
 }
 
 .navitem {
@@ -128,10 +130,10 @@
 
 @keyframes breathingShadow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(245, 245, 245, 0.6);
+    box-shadow: 0 0 10px rgba(245, 245, 245, 0.8);
   }
   50% {
-    box-shadow: 0 0 30px whitesmoke;
+    box-shadow: 0 0 30px var(--wood-colour);
   }
 }
 
@@ -180,8 +182,7 @@
   padding: 5px 20px 5px 20px; 
   margin: 0px;
   border-radius: 20px;
-  background-color: rgb(255,255,255,0.3);
-  transition: background-color 0.7s ease;
+  transition: background-color 0.2s ease;
   color: rgba(0,0,0,0.65);
 }
 
