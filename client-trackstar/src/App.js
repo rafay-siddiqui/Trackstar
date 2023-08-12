@@ -22,7 +22,6 @@ import locationDotIcon from './images/location-dot.svg'
 import axios from 'axios'
 import { decode } from '@mapbox/polyline';
 
-
 let DefaultIcon = L.icon({
   iconUrl: icon,
   shadowUrl: iconShadow,
@@ -506,8 +505,8 @@ function App() {
           </div>
 
           <div style={{ display: 'flex' }}>
-            <PointSnappingToggle />
             <ActivityToggle />
+            <PointSnappingToggle />
           </div>
 
           <DistanceDisplay />
