@@ -60,7 +60,7 @@ function DemoProfile({ userProfile, }) {
         <div ref={popupRef} className="logout-popup" style={popupPosition}>
           <button onClick={() => { setDemoLogout(true) }}>Log Out</button>
           <br />
-          {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Currently Demo Profily Only</span>}
+          {demoLogout && <span style={{ margin: '0px', fontSize: 'xx-small' }}>Currently Demo Profile Only</span>}
         </div>
       )}
     </>
