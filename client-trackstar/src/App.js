@@ -446,7 +446,7 @@ function App() {
       <nav className="navbar" >
         <div className='map-controls' >
           <ZoomControls />
-          <input id='map-location' className={searchLocation ? '' : 'empty'} type='text' placeholder='Set Map Location' value={searchLocation}
+          <input id='map-location' className={searchLocation ? '' : 'empty'} autoComplete='off' type='text' placeholder='Set Map Location' value={searchLocation}
             onChange={handleSearchLocationChange} onKeyUp={handleLocationSearch} />
         </div>
         <div className='title-container'>
