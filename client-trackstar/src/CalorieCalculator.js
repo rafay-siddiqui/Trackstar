@@ -139,18 +139,16 @@ function CalorieCalculator({ distance, unit, activity, routeName, RouteLoader })
       {workoutHistory && <ul style={{ textAlign: 'left' }}>
         {Object.keys(workoutHistory).map(workout => {
           return (
-            <li>
+            <li style={{listStyleType: 'none', padding: '0px', margin: '0px'}}>
               <span>
                 {workoutHistory[workout].name ? `Route: ${workoutHistory[workout].name}` : ''},
                 {` ${workoutHistory[workout].distance.toFixed(2)} ${workoutHistory[workout].unit}`}
-                {` in ${workoutHistory[workout].hours} ${parseInt(workoutHistory[workout].hours) !== 1 ? 'hours' : 'hour'}
-                ${workoutHistory[workout].minutes ? ` and ${workoutHistory[workout].minutes} 
-                ${parseInt(workoutHistory[workout].minutes) !== 1 ? 'minutes' : 'minute'}` : ''}`}
-                {` by ${workoutHistory[workout].activity}`}
+                {` in ${workoutHistory[workout].hours} h
+                ${workoutHistory[workout].minutes ? ` and ${workoutHistory[workout].minutes} m` : ''}`}
               </span>
               <br />
               <span>
-                {`Burned between ${parseFloat(workoutHistory[workout].caloriesBurned.min).toFixed(0)} and ${parseFloat(workoutHistory[workout].caloriesBurned.max).toFixed(0)} calories at ${workoutHistory[workout].weight} ${workoutHistory[workout].weightUnit}`}
+                {`${parseFloat(workoutHistory[workout].caloriesBurned.min).toFixed(0)} to ${parseFloat(workoutHistory[workout].caloriesBurned.max).toFixed(0)} cals at ${workoutHistory[workout].weight} ${workoutHistory[workout].weightUnit}, ${workoutHistory[workout].activity}`}
               </span>
             </li>)
         })}
